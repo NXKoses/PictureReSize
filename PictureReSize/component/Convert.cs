@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace PictureReSize.component
     {
         private readonly List<string> MoveErrorList = new List<string>();
         private int ActiveFilesLength;
-        public void PictureFileCheck()
+        public void PictureFileCheckAsync()
         {
             var vs = System.IO.Directory.GetFiles(Data.InputFolderPath, "*." + Data.InputFileType);
             if (vs.Length == 0)
@@ -23,27 +24,32 @@ namespace PictureReSize.component
             {
                 ActiveFilesLength = vs.Length;
 
+                Debug.WriteLine("thread_Value : " + Data.thread_Value + "で実行します。");
                 Resizer(); // 変換実行
             }
         }
 
-        private async void Resizer()
+        private async Task Resizer()
         {
+            var files = System.IO.Directory.GetFiles(Data.InputFolderPath, "*." + Data.InputFileType);
+
             int cnt = 0;
             Data.converting = true;
 
-            var vs = System.IO.Directory.GetFiles(Data.InputFolderPath, "*." + Data.InputFileType);
-
-            foreach (string stFilePath in vs)
+            await Task.Run(() =>
             {
-                await Task.Run(() =>
+                ParallelOptions option = new ParallelOptions();
+                option.MaxDegreeOfParallelism = Data.thread_Value;
+
+                //並列処理を利用する
+                Parallel.ForEach(files, option, stFilePath =>
                 {
-                    var filename = System.IO.Path.GetFileNameWithoutExtension(stFilePath);
+                    var filename = Path.GetFileNameWithoutExtension(stFilePath);
 
-                    using Bitmap bmp = new Bitmap(stFilePath);
-
+                    //各タスクで独立したBitmapオブジェクト
+                    using Bitmap bitmap = new Bitmap(stFilePath);
                     var resizeWidth = Data.X;
-                    var resizeHeight = (int)((float)bmp.Height / bmp.Width * Data.X);
+                    var resizeHeight = (int)((float)bitmap.Height / bitmap.Width * Data.X);
 
                     if (!Data.aspect_lock) //アスペクト比解除時
                     {
@@ -51,56 +57,37 @@ namespace PictureReSize.component
                         resizeHeight = Data.Y;
                     }
 
-                    using Bitmap resizeBmp = new Bitmap(resizeWidth, resizeHeight);
+                    //画像を縮小する
+                    using var resizeBmp = bitmap.GetThumbnailImage(resizeWidth, resizeHeight, null, IntPtr.Zero);
 
-                    using Graphics g = Graphics.FromImage(resizeBmp);
+                    try
+                    {
+                        resizeBmp.Save(Path.Combine(Data.OutputFolderPath + @"\", filename + "." + Data.OutputFileType));
+                    }
+                    catch
+                    {
+                        MoveErrorList.Add(filename);
+                        Debug.WriteLine("MoveErrorCnt Add :" + filename);
+                    }
 
-                    g.DrawImage(bmp, 0, 0, resizeWidth, resizeHeight);
-
-                    resizeBmp.Save(System.IO.Path.Combine(Data.GetAppPath() + @"/Temp/", filename + "." + Data.OutputFileType));
-
+                    cnt++;
+                    Function.Taskbar(cnt, ActiveFilesLength - 1);
                 });
+            });
 
-                cnt++;
-                Function.Taskbar(cnt, ActiveFilesLength);
+            Function.TempDelete();
+            MessageBox.Show(ActiveFilesLength + "/" + cnt + "個変換しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                PictureMove();
-                Function.TempDelete();
-            }
-            MessageBox.Show("合計:" + cnt + "個変換しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            if (MoveErrorList.Count != 0)　//エラーが有る場合
+            if (MoveErrorList.Count != 0) //エラーが有る場合
             {
                 string erroritemlist = "";
-
                 foreach (var item in MoveErrorList)
                 {
                     erroritemlist += Environment.NewLine + item;
                 }
-
-                
                 MessageBox.Show(erroritemlist + Environment.NewLine + "以下の画像の移動に失敗しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            //Function.TempDelete();
             Data.converting = false;
-        }
-
-        private void PictureMove()
-        {
-            DirectoryInfo target = new DirectoryInfo(Data.GetAppPath() + @"/Temp/");
-            foreach (FileInfo file in target.GetFiles())
-            {
-                //file.CopyTo(Data.OutputFolderPath + file.Name);
-                try
-                {
-                    System.IO.File.Copy(file.FullName, Data.OutputFolderPath + file.Name, true);
-                }
-                catch
-                {
-                    MoveErrorList.Add(file.Name);
-                    Console.WriteLine("MoveErrorCnt Add :" + file.Name);
-                }
-            }
         }
     }
 }

@@ -6,14 +6,14 @@ namespace PictureReSize
     static class Data
     {
         public static string GetAppPath() => Application.StartupPath;
-        public static string Appname;
+        public static string? Appname;
 
         public static bool converting;
 
-        public static string InputFolderPath;
-        public static string OutputFolderPath;
-        public static string InputFileType;
-        public static string OutputFileType;
+        public static string? InputFolderPath;
+        public static string? OutputFolderPath;
+        public static string? InputFileType;
+        public static string? OutputFileType;
         public static List<string> inputFolderListPath = new List<string>();
 
         public static int X;
@@ -21,5 +21,7 @@ namespace PictureReSize
 
         public static bool aspect_lock;
         public static bool fukusu = false;
+
+        public static int thread_Value = 8;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using PictureReSize.component;
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace PictureReSize
@@ -38,7 +39,7 @@ namespace PictureReSize
             }
 
             InputtextBox.Text = selectpath + @"\";
-            Console.WriteLine("InputPath: " + selectpath);
+            Debug.WriteLine("InputPath: " + selectpath);
         }
 
         private void OutputButton_Click(object sender, EventArgs e)
@@ -46,17 +47,17 @@ namespace PictureReSize
             var selectpath = new FolderSelecter().FolderSelect();
             Data.OutputFolderPath = selectpath + @"\";
             OutputtextBox.Text = selectpath + @"\";
-            Console.WriteLine("OutputPath: " + selectpath);
+            Debug.WriteLine("OutputPath: " + selectpath);
         }
 
         private void HenkanButton_Click(object sender, EventArgs e)
         {
-            Function.TempDelete();
             if (Data.converting)
             {
                 MessageBox.Show("変換中ですよ！！！　そんなに急がないで(´；ω；｀)", "(´；ω；｀)(´；ω；｀)(´；ω；｀)", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            Function.TempDelete();
 
             Data.InputFileType = InputTypetextbox.Text;
             Data.OutputFileType = OutputTypetextbox.Text;
@@ -84,7 +85,7 @@ namespace PictureReSize
             }
 
             var con = new component.Convert();
-            con.PictureFileCheck();
+            con.PictureFileCheckAsync();
         }
 
         private void FukusuCheckbox_CheckedChanged(object sender, EventArgs e)
@@ -112,7 +113,7 @@ namespace PictureReSize
             if (Data.fukusu)
             {
                 if (InputFileListBox.SelectedIndex == -1) return;
-                Console.WriteLine(InputFileListBox.Text);
+                Debug.WriteLine(InputFileListBox.Text);
                 Data.inputFolderListPath.Remove(InputFileListBox.Text);
 
 
@@ -123,13 +124,13 @@ namespace PictureReSize
 
         private void Form1_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                e.Effect = DragDropEffects.All;
+                e.Effect = DragDropEffects.None;
             }
             else
             {
-                e.Effect = DragDropEffects.None;
+                e.Effect = DragDropEffects.All;
             }
         }
 
@@ -148,12 +149,18 @@ namespace PictureReSize
                 Data.OutputFolderPath = selectpath + @"\";
                 OutputtextBox.Text = selectpath + @"\";
 
-                Console.WriteLine("OutputPath: " + selectpath);
+                Debug.WriteLine("OutputPath: " + selectpath);
             }
 
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
             var quickcon = new QuickConvert();
             quickcon.Run(files);
+        }
+
+        private void kakucho_button_Click(object sender, EventArgs e)
+        {
+            Form ksf = new KakuchoSettingForm();
+            ksf.ShowDialog();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
@@ -36,20 +37,24 @@ namespace PictureReSize.component
             int cnt = 0;
             Data.converting = true;
 
-            foreach (var folderitem in Data.inputFolderListPath)
+            await Task.Run(() =>
             {
-                var vs = System.IO.Directory.GetFiles(folderitem, "*." + Data.InputFileType);
+                ParallelOptions option = new ParallelOptions();
+                option.MaxDegreeOfParallelism = Data.thread_Value;
 
-                foreach (var pictureitem in vs)
+                //並列化
+                Parallel.ForEach(Data.inputFolderListPath, option, folderitem =>
                 {
-                    await Task.Run(() =>
+                    var vs = System.IO.Directory.GetFiles(folderitem, "*." + Data.InputFileType);
+
+                    Parallel.ForEach(vs, option, pictureitem =>
                     {
-                        var filename = System.IO.Path.GetFileNameWithoutExtension(pictureitem);
+                        var filename = Path.GetFileNameWithoutExtension(pictureitem);
 
-                        using Bitmap bmp = new Bitmap(pictureitem);
-
+                        //各タスクで独立したBitmapオブジェクト
+                        using Bitmap bitmap = new Bitmap(pictureitem);
                         var resizeWidth = Data.X;
-                        var resizeHeight = (int)((float)bmp.Height / bmp.Width * Data.X);
+                        var resizeHeight = (int)((float)bitmap.Height / bitmap.Width * Data.X);
 
                         if (!Data.aspect_lock) //アスペクト比解除時
                         {
@@ -57,28 +62,29 @@ namespace PictureReSize.component
                             resizeHeight = Data.Y;
                         }
 
-                        using Bitmap resizeBmp = new Bitmap(resizeWidth, resizeHeight);
+                        //画像を縮小する
+                        using var resizeBmp = bitmap.GetThumbnailImage(resizeWidth, resizeHeight, null, IntPtr.Zero);
 
-                        using Graphics g = Graphics.FromImage(resizeBmp);
+                        try
+                        {
+                            resizeBmp.Save(Path.Combine(Data.OutputFolderPath + @"\", filename + "." + Data.OutputFileType));
+                        }
+                        catch
+                        {
+                            MoveErrorList.Add(filename);
+                            Debug.WriteLine("MoveErrorCnt Add :" + filename);
+                        }
 
-                        g.DrawImage(bmp, 0, 0, resizeWidth, resizeHeight);
-
-                        resizeBmp.Save(System.IO.Path.Combine(Data.GetAppPath() + @"/Temp/", filename + "." + Data.OutputFileType));
-
+                        cnt++;
+                        Function.Taskbar(cnt, ActiveFilesLength - 1);
                     });
+                });
+            });
 
-                    cnt++;
-                    Function.Taskbar(cnt, ActiveFilesLength);
+            Function.TempDelete();
+            MessageBox.Show(ActiveFilesLength + "/" + cnt + "個変換しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    PictureMove();
-                    Function.TempDelete();
-
-                }
-            }
-
-            MessageBox.Show("合計:" + cnt + "個変換しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            if(MoveErrorList.Count != 0)　//エラーが有る場合
+            if (MoveErrorList.Count != 0)　//エラーが有る場合
             {
                 string erroritemlist = "";
 
@@ -91,24 +97,6 @@ namespace PictureReSize.component
             }
 
             Data.converting = false;
-        }
-
-        private void PictureMove()
-        {
-            DirectoryInfo target = new DirectoryInfo(Data.GetAppPath() + @"/Temp/");
-            foreach (FileInfo file in target.GetFiles())
-            {
-                //file.CopyTo(Data.OutputFolderPath + file.Name);
-                try
-                {
-                    System.IO.File.Copy(file.FullName, Data.OutputFolderPath + file.Name, true);
-                }
-                catch
-                {
-                    MoveErrorList.Add(file.Name);
-                    Console.WriteLine("MoveErrorCnt Add :" + file.Name);
-                }
-            }
         }
     }
 }
