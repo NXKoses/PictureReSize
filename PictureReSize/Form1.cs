@@ -21,14 +21,12 @@ namespace PictureReSize
             InputButton.Select();
 
             Data.Appname = this.Text;
-
-            //var con = new component.Convert();
             Function.TempDelete();
         }
 
         private void InputButton_Click(object sender, EventArgs e)
         {
-            var selectpath = new FolderSelecter().FolderSelect();
+            var selectpath = FolderSelecter.FolderSelect();
 
             Data.InputFolderPath = selectpath + @"\";
 
@@ -44,7 +42,7 @@ namespace PictureReSize
 
         private void OutputButton_Click(object sender, EventArgs e)
         {
-            var selectpath = new FolderSelecter().FolderSelect();
+            var selectpath = FolderSelecter.FolderSelect();
             Data.OutputFolderPath = selectpath + @"\";
             OutputtextBox.Text = selectpath + @"\";
             Debug.WriteLine("OutputPath: " + selectpath);
@@ -144,7 +142,7 @@ namespace PictureReSize
 
             if (Data.OutputFolderPath == null)
             {
-                var selectpath = new FolderSelecter().FolderSelect();
+                var selectpath = FolderSelecter.FolderSelect();
                 if (selectpath.Length == 0) return;
                 Data.OutputFolderPath = selectpath + @"\";
                 OutputtextBox.Text = selectpath + @"\";

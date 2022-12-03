@@ -38,8 +38,10 @@ namespace PictureReSize.component
 
             await Task.Run(() =>
             {
-                ParallelOptions option = new ParallelOptions();
-                option.MaxDegreeOfParallelism = Data.thread_Value;
+                ParallelOptions option = new ParallelOptions
+                {
+                    MaxDegreeOfParallelism = Data.thread_Value
+                };
 
                 //並列処理を利用する
                 Parallel.ForEach(files, option, stFilePath =>
@@ -58,7 +60,10 @@ namespace PictureReSize.component
                     }
 
                     //画像を縮小する
-                    using var resizeBmp = bitmap.GetThumbnailImage(resizeWidth, resizeHeight, null, IntPtr.Zero);
+                    using Bitmap resizeBmp = new Bitmap(resizeWidth, resizeHeight);
+                    using Graphics g = Graphics.FromImage(resizeBmp);
+                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
+                    g.DrawImage(bitmap, 0, 0, resizeWidth, resizeHeight);
 
                     try
                     {

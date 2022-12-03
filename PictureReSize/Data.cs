@@ -22,6 +22,6 @@ namespace PictureReSize
         public static bool aspect_lock;
         public static bool fukusu = false;
 
-        public static int thread_Value = 8;
+        public static int thread_Value = 10;
     }
 }

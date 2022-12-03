@@ -36,9 +36,10 @@
             // 
             // enter_button
             // 
-            this.enter_button.Location = new System.Drawing.Point(99, 118);
+            this.enter_button.Location = new System.Drawing.Point(115, 148);
+            this.enter_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.enter_button.Name = "enter_button";
-            this.enter_button.Size = new System.Drawing.Size(75, 23);
+            this.enter_button.Size = new System.Drawing.Size(88, 29);
             this.enter_button.TabIndex = 0;
             this.enter_button.Text = "決定";
             this.enter_button.UseVisualStyleBackColor = true;
@@ -47,40 +48,43 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(14, 11);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 12);
+            this.label1.Size = new System.Drawing.Size(101, 15);
             this.label1.TabIndex = 1;
             this.label1.Text = "画像変換スレッド数";
             // 
             // thread_Value_textBox
             // 
-            this.thread_Value_textBox.Location = new System.Drawing.Point(117, 6);
+            this.thread_Value_textBox.Location = new System.Drawing.Point(136, 8);
+            this.thread_Value_textBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.thread_Value_textBox.Name = "thread_Value_textBox";
-            this.thread_Value_textBox.Size = new System.Drawing.Size(57, 19);
+            this.thread_Value_textBox.Size = new System.Drawing.Size(66, 23);
             this.thread_Value_textBox.TabIndex = 2;
-            this.thread_Value_textBox.Text = "8";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(0, 28);
+            this.label2.Location = new System.Drawing.Point(0, 35);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(174, 24);
+            this.label2.Size = new System.Drawing.Size(164, 30);
             this.label2.TabIndex = 3;
-            this.label2.Text = "※9～10にすると変換中にパソコンが\r\nすごく重くなります。";
+            this.label2.Text = "※速さは上がりますが、\r\n増やせば増やすほど重くなります。";
             // 
             // KakuchoSettingForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(184, 153);
+            this.ClientSize = new System.Drawing.Size(215, 191);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.thread_Value_textBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.enter_button);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.Name = "KakuchoSettingForm";
             this.ShowIcon = false;
