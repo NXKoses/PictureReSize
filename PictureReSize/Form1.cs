@@ -61,7 +61,7 @@ namespace PictureReSize
             Function.TempDelete();
 
             Data.InputFileType = InputTypetextbox.Text;
-            Data.OutputFileType = OutputDataType.GetImageFormatOutputDataType(this.OutputTypeComboBox.SelectedText);
+            Data.OutputFileType = OutputDataType.GetImageFormatOutputDataType(this.OutputTypeComboBox.SelectedItem.ToString());
             Data.X = int.Parse(Xtextbox.Text);
             Data.Y = int.Parse(Ytextbox.Text);
             Data.aspect_lock = aspect_ratioCheckBox.Checked;
