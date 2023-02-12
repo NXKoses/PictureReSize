@@ -38,7 +38,7 @@ namespace PictureReSize.component
 
             await Task.Run(() =>
             {
-                ParallelOptions option = new ParallelOptions
+                ParallelOptions option = new()
                 {
                     MaxDegreeOfParallelism = Data.thread_Value
                 };
@@ -67,7 +67,7 @@ namespace PictureReSize.component
 
                     try
                     {
-                        resizeBmp.Save(Path.Combine(Data.OutputFolderPath + @"\", filename + "." + Data.OutputFileType));
+                        resizeBmp.Save(Path.Combine(Data.OutputFolderPath + @"\", filename + "." + Data.OutputFileType.ToString()), Data.OutputFileType);
                     }
                     catch
                     {

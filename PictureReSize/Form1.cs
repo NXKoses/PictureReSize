@@ -1,6 +1,8 @@
 ﻿using PictureReSize.component;
 using System;
+using System.Configuration;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace PictureReSize
@@ -12,8 +14,9 @@ namespace PictureReSize
             InitializeComponent();
             Xtextbox.Text = "1920";
             Ytextbox.Text = "1080";
-            InputTypetextbox.Text = "jpg";
-            OutputTypetextbox.Text = "jpg";
+            InputTypetextbox.Text = Properties.Settings.Default.IntputFileType;
+            OutputTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            OutputTypeComboBox.SelectedIndex = Properties.Settings.Default.OutputFileType;
             InputtextBox.Text = "選択してください";
             OutputtextBox.Text = "選択してください";
             InputFileListBox.Visible = false;
@@ -58,14 +61,13 @@ namespace PictureReSize
             Function.TempDelete();
 
             Data.InputFileType = InputTypetextbox.Text;
-            Data.OutputFileType = OutputTypetextbox.Text;
+            Data.OutputFileType = OutputDataType.GetImageFormatOutputDataType(this.OutputTypeComboBox.SelectedText);
             Data.X = int.Parse(Xtextbox.Text);
             Data.Y = int.Parse(Ytextbox.Text);
             Data.aspect_lock = aspect_ratioCheckBox.Checked;
 
             var inputcheck = 0;
             if (Data.InputFileType.Length == 0) inputcheck++;
-            if (Data.OutputFileType.Length == 0) inputcheck++;
             if (Data.InputFolderPath == null) inputcheck++;
             if (Data.OutputFolderPath == null) inputcheck++;
 
@@ -135,7 +137,7 @@ namespace PictureReSize
         private void Form1_DragDrop(object sender, DragEventArgs e)
         {
             Data.InputFileType = InputTypetextbox.Text;
-            Data.OutputFileType = OutputTypetextbox.Text;
+            Data.OutputFileType = OutputDataType.GetImageFormatOutputDataType(this.OutputTypeComboBox.SelectedText);
             Data.X = int.Parse(Xtextbox.Text);
             Data.Y = int.Parse(Ytextbox.Text);
             Data.aspect_lock = aspect_ratioCheckBox.Checked;
@@ -152,13 +154,19 @@ namespace PictureReSize
 
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
             var quickcon = new QuickConvert();
-            quickcon.Run(files);
+            quickcon.ConvertRun(files);
         }
 
         private void kakucho_button_Click(object sender, EventArgs e)
         {
             Form ksf = new KakuchoSettingForm();
             ksf.ShowDialog();
+        }
+
+        private void settingsave_button_Click(object sender, EventArgs e)
+        {
+            var sform = new SettingSaveForm(InputTypetextbox.Text, OutputTypeComboBox.SelectedItem.ToString());
+            sform.ShowDialog();
         }
     }
 }

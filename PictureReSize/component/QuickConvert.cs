@@ -12,7 +12,7 @@ namespace PictureReSize.component
         private readonly List<string> MoveErrorList = new List<string>();
         private int ActiveFilesLength;
         string[] DragFileList;
-        public void Run(String[] Data)
+        public void ConvertRun(String[] Data)
         {
             DragFileList = Data;
             ActiveFilesLength = DragFileList.Length;
@@ -50,10 +50,10 @@ namespace PictureReSize.component
 
                         g.DrawImage(bmp, 0, 0, resizeWidth, resizeHeight);
 
-                        resizeBmp.Save(System.IO.Path.Combine(Data.GetAppPath() + @"/Temp/", filename + "." + Data.OutputFileType));
+                        resizeBmp.Save(System.IO.Path.Combine(Data.GetAppPath() + @"/Temp/", filename + "." + Data.OutputFileType.ToString()), Data.OutputFileType);
 
                     }
-                    catch (System.ArgumentException)
+                    catch
                     {
                         Console.WriteLine("ファイルの変換に失敗　スルー");
                     }

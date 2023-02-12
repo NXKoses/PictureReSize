@@ -30,11 +30,12 @@ namespace PictureReSize
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.settingsave_button = new System.Windows.Forms.Button();
+            this.OutputTypeComboBox = new System.Windows.Forms.ComboBox();
             this.kakucho_button = new System.Windows.Forms.Button();
             this.FukusuCheckbox = new System.Windows.Forms.CheckBox();
             this.aspect_ratioCheckBox = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.OutputTypetextbox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.InputTypetextbox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -53,11 +54,12 @@ namespace PictureReSize
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.settingsave_button);
+            this.groupBox1.Controls.Add(this.OutputTypeComboBox);
             this.groupBox1.Controls.Add(this.kakucho_button);
             this.groupBox1.Controls.Add(this.FukusuCheckbox);
             this.groupBox1.Controls.Add(this.aspect_ratioCheckBox);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.OutputTypetextbox);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.InputTypetextbox);
             this.groupBox1.Controls.Add(this.label2);
@@ -68,10 +70,33 @@ namespace PictureReSize
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox1.Size = new System.Drawing.Size(213, 220);
+            this.groupBox1.Size = new System.Drawing.Size(239, 220);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "基本設定";
+            // 
+            // settingsave_button
+            // 
+            this.settingsave_button.Location = new System.Drawing.Point(189, 102);
+            this.settingsave_button.Name = "settingsave_button";
+            this.settingsave_button.Size = new System.Drawing.Size(44, 23);
+            this.settingsave_button.TabIndex = 12;
+            this.settingsave_button.Text = "保存";
+            this.settingsave_button.UseVisualStyleBackColor = true;
+            this.settingsave_button.Click += new System.EventHandler(this.settingsave_button_Click);
+            // 
+            // OutputTypeComboBox
+            // 
+            this.OutputTypeComboBox.FormattingEnabled = true;
+            this.OutputTypeComboBox.Items.AddRange(new object[] {
+            "bmp",
+            "icon",
+            "jpeg",
+            "png"});
+            this.OutputTypeComboBox.Location = new System.Drawing.Point(108, 101);
+            this.OutputTypeComboBox.Name = "OutputTypeComboBox";
+            this.OutputTypeComboBox.Size = new System.Drawing.Size(75, 26);
+            this.OutputTypeComboBox.TabIndex = 11;
             // 
             // kakucho_button
             // 
@@ -114,13 +139,6 @@ namespace PictureReSize
             this.label4.Size = new System.Drawing.Size(184, 18);
             this.label4.TabIndex = 7;
             this.label4.Text = "➖➖➖➖➖➖➖➖➖➖➖";
-            // 
-            // OutputTypetextbox
-            // 
-            this.OutputTypetextbox.Location = new System.Drawing.Point(108, 101);
-            this.OutputTypetextbox.Name = "OutputTypetextbox";
-            this.OutputTypetextbox.Size = new System.Drawing.Size(75, 25);
-            this.OutputTypetextbox.TabIndex = 6;
             // 
             // label3
             // 
@@ -224,9 +242,9 @@ namespace PictureReSize
             // 
             this.InputFileListBox.FormattingEnabled = true;
             this.InputFileListBox.ItemHeight = 18;
-            this.InputFileListBox.Location = new System.Drawing.Point(231, 12);
+            this.InputFileListBox.Location = new System.Drawing.Point(257, 12);
             this.InputFileListBox.Name = "InputFileListBox";
-            this.InputFileListBox.Size = new System.Drawing.Size(374, 184);
+            this.InputFileListBox.Size = new System.Drawing.Size(348, 184);
             this.InputFileListBox.TabIndex = 6;
             // 
             // InputFileListRemoveButton
@@ -277,7 +295,6 @@ namespace PictureReSize
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox InputTypetextbox;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox OutputTypetextbox;
         private System.Windows.Forms.Button HenkanButton;
         private System.Windows.Forms.Button InputButton;
         private System.Windows.Forms.Button OutputButton;
@@ -289,6 +306,8 @@ namespace PictureReSize
         private System.Windows.Forms.ListBox InputFileListBox;
         private System.Windows.Forms.Button InputFileListRemoveButton;
         private System.Windows.Forms.Button kakucho_button;
+        private System.Windows.Forms.ComboBox OutputTypeComboBox;
+        private System.Windows.Forms.Button settingsave_button;
     }
 }
 

@@ -22,5 +22,29 @@ namespace PictureReSize.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int OutputFileType {
+            get {
+                return ((int)(this["OutputFileType"]));
+            }
+            set {
+                this["OutputFileType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("jpg")]
+        public string IntputFileType {
+            get {
+                return ((string)(this["IntputFileType"]));
+            }
+            set {
+                this["IntputFileType"] = value;
+            }
+        }
     }
 }

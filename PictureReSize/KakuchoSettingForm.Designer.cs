@@ -36,8 +36,8 @@
             // 
             // enter_button
             // 
-            this.enter_button.Location = new System.Drawing.Point(115, 148);
-            this.enter_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.enter_button.Location = new System.Drawing.Point(114, 78);
+            this.enter_button.Margin = new System.Windows.Forms.Padding(4);
             this.enter_button.Name = "enter_button";
             this.enter_button.Size = new System.Drawing.Size(88, 29);
             this.enter_button.TabIndex = 0;
@@ -58,7 +58,7 @@
             // thread_Value_textBox
             // 
             this.thread_Value_textBox.Location = new System.Drawing.Point(136, 8);
-            this.thread_Value_textBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.thread_Value_textBox.Margin = new System.Windows.Forms.Padding(4);
             this.thread_Value_textBox.Name = "thread_Value_textBox";
             this.thread_Value_textBox.Size = new System.Drawing.Size(66, 23);
             this.thread_Value_textBox.TabIndex = 2;
@@ -78,13 +78,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(215, 191);
+            this.ClientSize = new System.Drawing.Size(211, 116);
+            this.ControlBox = false;
             this.Controls.Add(this.label2);
             this.Controls.Add(this.thread_Value_textBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.enter_button);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "KakuchoSettingForm";
             this.ShowIcon = false;
