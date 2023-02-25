@@ -50,7 +50,7 @@ namespace PictureReSize.component
 
                         g.DrawImage(bmp, 0, 0, resizeWidth, resizeHeight);
 
-                        resizeBmp.Save(System.IO.Path.Combine(Data.GetAppPath() + @"/Temp/", filename + "." + Data.OutputFileType.ToString()), Data.OutputFileType);
+                        resizeBmp.Save(System.IO.Path.Combine(Data.GetAppPath() + @"/Temp/", filename + "." + Data.OutputFileType.ToString().ToLower()), Data.OutputFileType);
 
                     }
                     catch

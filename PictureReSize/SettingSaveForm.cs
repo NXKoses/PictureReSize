@@ -12,8 +12,8 @@ namespace PictureReSize
 {
     public partial class SettingSaveForm : Form
     {
-        public string Input_Datatype { get; }
-        public string Output_Datatype { get; }
+        private string Input_Datatype { get; }
+        private string Output_Datatype { get; }
 
         public SettingSaveForm(string input_datatype, string output_datatype)
         {

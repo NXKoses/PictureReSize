@@ -67,7 +67,7 @@ namespace PictureReSize.component
 
                     try
                     {
-                        resizeBmp.Save(Path.Combine(Data.OutputFolderPath + @"\", filename + "." + Data.OutputFileType.ToString()), Data.OutputFileType);
+                        resizeBmp.Save(Path.Combine(Data.OutputFolderPath + @"\", filename + "." + Data.OutputFileType.ToString().ToLower()), Data.OutputFileType);
                     }
                     catch
                     {
