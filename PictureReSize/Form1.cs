@@ -25,6 +25,7 @@ namespace PictureReSize
 
             Data.Appname = this.Text;
             Function.TempDelete();
+            this.Text += " 1.0.0.2";
         }
 
         private void InputButton_Click(object sender, EventArgs e)
@@ -168,5 +169,6 @@ namespace PictureReSize
             var sform = new SettingSaveForm(InputTypetextbox.Text, OutputTypeComboBox.SelectedItem.ToString());
             sform.ShowDialog();
         }
+
     }
 }

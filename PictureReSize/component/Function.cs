@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAPICodePack.Taskbar;
+using System;
 using System.IO;
 
 namespace PictureReSize.component
@@ -8,6 +9,7 @@ namespace PictureReSize.component
         public static void TempDelete()
         {
             DirectoryInfo target = new DirectoryInfo(Data.GetAppPath() + @"/Temp/");
+            if (!Directory.Exists(Data.GetAppPath() + @"/Temp/")) target.Create();
             foreach (FileInfo file in target.GetFiles())
             {
                 file.Delete();

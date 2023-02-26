@@ -29,261 +29,256 @@ namespace PictureReSize
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.settingsave_button = new System.Windows.Forms.Button();
-            this.OutputTypeComboBox = new System.Windows.Forms.ComboBox();
-            this.kakucho_button = new System.Windows.Forms.Button();
-            this.FukusuCheckbox = new System.Windows.Forms.CheckBox();
-            this.aspect_ratioCheckBox = new System.Windows.Forms.CheckBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.InputTypetextbox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.Ytextbox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.Xtextbox = new System.Windows.Forms.TextBox();
-            this.HenkanButton = new System.Windows.Forms.Button();
-            this.InputButton = new System.Windows.Forms.Button();
-            this.OutputButton = new System.Windows.Forms.Button();
-            this.InputtextBox = new System.Windows.Forms.TextBox();
-            this.OutputtextBox = new System.Windows.Forms.TextBox();
-            this.InputFileListBox = new System.Windows.Forms.ListBox();
-            this.InputFileListRemoveButton = new System.Windows.Forms.Button();
-            this.groupBox1.SuspendLayout();
-            this.SuspendLayout();
+            groupBox1 = new System.Windows.Forms.GroupBox();
+            settingsave_button = new System.Windows.Forms.Button();
+            OutputTypeComboBox = new System.Windows.Forms.ComboBox();
+            kakucho_button = new System.Windows.Forms.Button();
+            FukusuCheckbox = new System.Windows.Forms.CheckBox();
+            aspect_ratioCheckBox = new System.Windows.Forms.CheckBox();
+            label4 = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
+            InputTypetextbox = new System.Windows.Forms.TextBox();
+            label2 = new System.Windows.Forms.Label();
+            Ytextbox = new System.Windows.Forms.TextBox();
+            label1 = new System.Windows.Forms.Label();
+            Xtextbox = new System.Windows.Forms.TextBox();
+            HenkanButton = new System.Windows.Forms.Button();
+            InputButton = new System.Windows.Forms.Button();
+            OutputButton = new System.Windows.Forms.Button();
+            InputtextBox = new System.Windows.Forms.TextBox();
+            OutputtextBox = new System.Windows.Forms.TextBox();
+            InputFileListBox = new System.Windows.Forms.ListBox();
+            InputFileListRemoveButton = new System.Windows.Forms.Button();
+            groupBox1.SuspendLayout();
+            SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.settingsave_button);
-            this.groupBox1.Controls.Add(this.OutputTypeComboBox);
-            this.groupBox1.Controls.Add(this.kakucho_button);
-            this.groupBox1.Controls.Add(this.FukusuCheckbox);
-            this.groupBox1.Controls.Add(this.aspect_ratioCheckBox);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.InputTypetextbox);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.Ytextbox);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.Xtextbox);
-            this.groupBox1.Location = new System.Drawing.Point(12, 13);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox1.Size = new System.Drawing.Size(239, 220);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "基本設定";
+            groupBox1.Controls.Add(settingsave_button);
+            groupBox1.Controls.Add(OutputTypeComboBox);
+            groupBox1.Controls.Add(kakucho_button);
+            groupBox1.Controls.Add(FukusuCheckbox);
+            groupBox1.Controls.Add(aspect_ratioCheckBox);
+            groupBox1.Controls.Add(label4);
+            groupBox1.Controls.Add(label3);
+            groupBox1.Controls.Add(InputTypetextbox);
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(Ytextbox);
+            groupBox1.Controls.Add(label1);
+            groupBox1.Controls.Add(Xtextbox);
+            groupBox1.Location = new System.Drawing.Point(12, 13);
+            groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            groupBox1.Size = new System.Drawing.Size(239, 220);
+            groupBox1.TabIndex = 0;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "基本設定";
             // 
             // settingsave_button
             // 
-            this.settingsave_button.Location = new System.Drawing.Point(189, 102);
-            this.settingsave_button.Name = "settingsave_button";
-            this.settingsave_button.Size = new System.Drawing.Size(44, 23);
-            this.settingsave_button.TabIndex = 12;
-            this.settingsave_button.Text = "保存";
-            this.settingsave_button.UseVisualStyleBackColor = true;
-            this.settingsave_button.Click += new System.EventHandler(this.settingsave_button_Click);
+            settingsave_button.Location = new System.Drawing.Point(189, 102);
+            settingsave_button.Name = "settingsave_button";
+            settingsave_button.Size = new System.Drawing.Size(44, 23);
+            settingsave_button.TabIndex = 12;
+            settingsave_button.Text = "保存";
+            settingsave_button.UseVisualStyleBackColor = true;
+            settingsave_button.Click += settingsave_button_Click;
             // 
             // OutputTypeComboBox
             // 
-            this.OutputTypeComboBox.FormattingEnabled = true;
-            this.OutputTypeComboBox.Items.AddRange(new object[] {
-            "bmp",
-            "icon",
-            "jpeg",
-            "png"});
-            this.OutputTypeComboBox.Location = new System.Drawing.Point(108, 101);
-            this.OutputTypeComboBox.Name = "OutputTypeComboBox";
-            this.OutputTypeComboBox.Size = new System.Drawing.Size(75, 26);
-            this.OutputTypeComboBox.TabIndex = 11;
+            OutputTypeComboBox.FormattingEnabled = true;
+            OutputTypeComboBox.Items.AddRange(new object[] { "bmp", "icon", "jpeg", "png" });
+            OutputTypeComboBox.Location = new System.Drawing.Point(108, 101);
+            OutputTypeComboBox.Name = "OutputTypeComboBox";
+            OutputTypeComboBox.Size = new System.Drawing.Size(75, 26);
+            OutputTypeComboBox.TabIndex = 11;
             // 
             // kakucho_button
             // 
-            this.kakucho_button.Location = new System.Drawing.Point(129, 183);
-            this.kakucho_button.Name = "kakucho_button";
-            this.kakucho_button.Size = new System.Drawing.Size(78, 30);
-            this.kakucho_button.TabIndex = 10;
-            this.kakucho_button.Text = "拡張設定";
-            this.kakucho_button.UseVisualStyleBackColor = true;
-            this.kakucho_button.Click += new System.EventHandler(this.kakucho_button_Click);
+            kakucho_button.Location = new System.Drawing.Point(129, 183);
+            kakucho_button.Name = "kakucho_button";
+            kakucho_button.Size = new System.Drawing.Size(78, 30);
+            kakucho_button.TabIndex = 10;
+            kakucho_button.Text = "拡張設定";
+            kakucho_button.UseVisualStyleBackColor = true;
+            kakucho_button.Click += kakucho_button_Click;
             // 
             // FukusuCheckbox
             // 
-            this.FukusuCheckbox.AutoSize = true;
-            this.FukusuCheckbox.Location = new System.Drawing.Point(9, 191);
-            this.FukusuCheckbox.Name = "FukusuCheckbox";
-            this.FukusuCheckbox.Size = new System.Drawing.Size(75, 22);
-            this.FukusuCheckbox.TabIndex = 9;
-            this.FukusuCheckbox.Text = "複数選択";
-            this.FukusuCheckbox.UseVisualStyleBackColor = true;
-            this.FukusuCheckbox.CheckedChanged += new System.EventHandler(this.FukusuCheckbox_CheckedChanged);
+            FukusuCheckbox.AutoSize = true;
+            FukusuCheckbox.Location = new System.Drawing.Point(9, 191);
+            FukusuCheckbox.Name = "FukusuCheckbox";
+            FukusuCheckbox.Size = new System.Drawing.Size(75, 22);
+            FukusuCheckbox.TabIndex = 9;
+            FukusuCheckbox.Text = "複数選択";
+            FukusuCheckbox.UseVisualStyleBackColor = true;
+            FukusuCheckbox.CheckedChanged += FukusuCheckbox_CheckedChanged;
             // 
             // aspect_ratioCheckBox
             // 
-            this.aspect_ratioCheckBox.AutoSize = true;
-            this.aspect_ratioCheckBox.Checked = true;
-            this.aspect_ratioCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.aspect_ratioCheckBox.Location = new System.Drawing.Point(9, 155);
-            this.aspect_ratioCheckBox.Name = "aspect_ratioCheckBox";
-            this.aspect_ratioCheckBox.Size = new System.Drawing.Size(159, 22);
-            this.aspect_ratioCheckBox.TabIndex = 8;
-            this.aspect_ratioCheckBox.Text = "アスペクト比を維持する";
-            this.aspect_ratioCheckBox.UseVisualStyleBackColor = true;
+            aspect_ratioCheckBox.AutoSize = true;
+            aspect_ratioCheckBox.Checked = true;
+            aspect_ratioCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            aspect_ratioCheckBox.Location = new System.Drawing.Point(9, 155);
+            aspect_ratioCheckBox.Name = "aspect_ratioCheckBox";
+            aspect_ratioCheckBox.Size = new System.Drawing.Size(159, 22);
+            aspect_ratioCheckBox.TabIndex = 8;
+            aspect_ratioCheckBox.Text = "アスペクト比を維持する";
+            aspect_ratioCheckBox.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 134);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(184, 18);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "➖➖➖➖➖➖➖➖➖➖➖";
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(6, 134);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(184, 18);
+            label4.TabIndex = 7;
+            label4.Text = "➖➖➖➖➖➖➖➖➖➖➖";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 104);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(68, 18);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "出力拡張子";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(6, 104);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(68, 18);
+            label3.TabIndex = 5;
+            label3.Text = "出力拡張子";
             // 
             // InputTypetextbox
             // 
-            this.InputTypetextbox.Location = new System.Drawing.Point(108, 66);
-            this.InputTypetextbox.Name = "InputTypetextbox";
-            this.InputTypetextbox.Size = new System.Drawing.Size(75, 25);
-            this.InputTypetextbox.TabIndex = 4;
+            InputTypetextbox.Location = new System.Drawing.Point(108, 66);
+            InputTypetextbox.Name = "InputTypetextbox";
+            InputTypetextbox.Size = new System.Drawing.Size(75, 25);
+            InputTypetextbox.TabIndex = 4;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 69);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(92, 18);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "読み取る拡張子";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(6, 69);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(92, 18);
+            label2.TabIndex = 3;
+            label2.Text = "読み取る拡張子";
             // 
             // Ytextbox
             // 
-            this.Ytextbox.Location = new System.Drawing.Point(108, 25);
-            this.Ytextbox.Name = "Ytextbox";
-            this.Ytextbox.Size = new System.Drawing.Size(75, 25);
-            this.Ytextbox.TabIndex = 2;
+            Ytextbox.Location = new System.Drawing.Point(108, 25);
+            Ytextbox.Name = "Ytextbox";
+            Ytextbox.Size = new System.Drawing.Size(75, 25);
+            Ytextbox.TabIndex = 2;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(87, 33);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(15, 18);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "x";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(87, 33);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(15, 18);
+            label1.TabIndex = 1;
+            label1.Text = "x";
             // 
             // Xtextbox
             // 
-            this.Xtextbox.Location = new System.Drawing.Point(6, 25);
-            this.Xtextbox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Xtextbox.Name = "Xtextbox";
-            this.Xtextbox.Size = new System.Drawing.Size(75, 25);
-            this.Xtextbox.TabIndex = 0;
+            Xtextbox.Location = new System.Drawing.Point(6, 25);
+            Xtextbox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            Xtextbox.Name = "Xtextbox";
+            Xtextbox.Size = new System.Drawing.Size(75, 25);
+            Xtextbox.TabIndex = 0;
             // 
             // HenkanButton
             // 
-            this.HenkanButton.Font = new System.Drawing.Font("メイリオ", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.HenkanButton.Location = new System.Drawing.Point(12, 342);
-            this.HenkanButton.Name = "HenkanButton";
-            this.HenkanButton.Size = new System.Drawing.Size(593, 65);
-            this.HenkanButton.TabIndex = 1;
-            this.HenkanButton.Text = "変換";
-            this.HenkanButton.UseVisualStyleBackColor = true;
-            this.HenkanButton.Click += new System.EventHandler(this.HenkanButton_Click);
+            HenkanButton.Font = new System.Drawing.Font("メイリオ", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            HenkanButton.Location = new System.Drawing.Point(12, 342);
+            HenkanButton.Name = "HenkanButton";
+            HenkanButton.Size = new System.Drawing.Size(593, 65);
+            HenkanButton.TabIndex = 1;
+            HenkanButton.Text = "変換";
+            HenkanButton.UseVisualStyleBackColor = true;
+            HenkanButton.Click += HenkanButton_Click;
             // 
             // InputButton
             // 
-            this.InputButton.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.InputButton.Location = new System.Drawing.Point(12, 240);
-            this.InputButton.Name = "InputButton";
-            this.InputButton.Size = new System.Drawing.Size(295, 65);
-            this.InputButton.TabIndex = 2;
-            this.InputButton.Text = "入力";
-            this.InputButton.UseVisualStyleBackColor = true;
-            this.InputButton.Click += new System.EventHandler(this.InputButton_Click);
+            InputButton.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            InputButton.Location = new System.Drawing.Point(12, 240);
+            InputButton.Name = "InputButton";
+            InputButton.Size = new System.Drawing.Size(295, 65);
+            InputButton.TabIndex = 2;
+            InputButton.Text = "入力";
+            InputButton.UseVisualStyleBackColor = true;
+            InputButton.Click += InputButton_Click;
             // 
             // OutputButton
             // 
-            this.OutputButton.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.OutputButton.Location = new System.Drawing.Point(313, 240);
-            this.OutputButton.Name = "OutputButton";
-            this.OutputButton.Size = new System.Drawing.Size(292, 65);
-            this.OutputButton.TabIndex = 3;
-            this.OutputButton.Text = "出力";
-            this.OutputButton.UseVisualStyleBackColor = true;
-            this.OutputButton.Click += new System.EventHandler(this.OutputButton_Click);
+            OutputButton.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            OutputButton.Location = new System.Drawing.Point(313, 240);
+            OutputButton.Name = "OutputButton";
+            OutputButton.Size = new System.Drawing.Size(292, 65);
+            OutputButton.TabIndex = 3;
+            OutputButton.Text = "出力";
+            OutputButton.UseVisualStyleBackColor = true;
+            OutputButton.Click += OutputButton_Click;
             // 
             // InputtextBox
             // 
-            this.InputtextBox.Location = new System.Drawing.Point(12, 311);
-            this.InputtextBox.Name = "InputtextBox";
-            this.InputtextBox.ReadOnly = true;
-            this.InputtextBox.Size = new System.Drawing.Size(295, 25);
-            this.InputtextBox.TabIndex = 4;
+            InputtextBox.Location = new System.Drawing.Point(12, 311);
+            InputtextBox.Name = "InputtextBox";
+            InputtextBox.ReadOnly = true;
+            InputtextBox.Size = new System.Drawing.Size(295, 25);
+            InputtextBox.TabIndex = 4;
             // 
             // OutputtextBox
             // 
-            this.OutputtextBox.Location = new System.Drawing.Point(313, 311);
-            this.OutputtextBox.Name = "OutputtextBox";
-            this.OutputtextBox.ReadOnly = true;
-            this.OutputtextBox.Size = new System.Drawing.Size(292, 25);
-            this.OutputtextBox.TabIndex = 5;
+            OutputtextBox.Location = new System.Drawing.Point(313, 311);
+            OutputtextBox.Name = "OutputtextBox";
+            OutputtextBox.ReadOnly = true;
+            OutputtextBox.Size = new System.Drawing.Size(292, 25);
+            OutputtextBox.TabIndex = 5;
             // 
             // InputFileListBox
             // 
-            this.InputFileListBox.FormattingEnabled = true;
-            this.InputFileListBox.ItemHeight = 18;
-            this.InputFileListBox.Location = new System.Drawing.Point(257, 12);
-            this.InputFileListBox.Name = "InputFileListBox";
-            this.InputFileListBox.Size = new System.Drawing.Size(348, 184);
-            this.InputFileListBox.TabIndex = 6;
+            InputFileListBox.FormattingEnabled = true;
+            InputFileListBox.ItemHeight = 18;
+            InputFileListBox.Location = new System.Drawing.Point(257, 12);
+            InputFileListBox.Name = "InputFileListBox";
+            InputFileListBox.Size = new System.Drawing.Size(348, 184);
+            InputFileListBox.TabIndex = 6;
             // 
             // InputFileListRemoveButton
             // 
-            this.InputFileListRemoveButton.Location = new System.Drawing.Point(528, 204);
-            this.InputFileListRemoveButton.Name = "InputFileListRemoveButton";
-            this.InputFileListRemoveButton.Size = new System.Drawing.Size(77, 23);
-            this.InputFileListRemoveButton.TabIndex = 7;
-            this.InputFileListRemoveButton.Text = "削除";
-            this.InputFileListRemoveButton.UseVisualStyleBackColor = true;
-            this.InputFileListRemoveButton.Click += new System.EventHandler(this.InputFileListRemoveButton_Click);
+            InputFileListRemoveButton.Location = new System.Drawing.Point(528, 204);
+            InputFileListRemoveButton.Name = "InputFileListRemoveButton";
+            InputFileListRemoveButton.Size = new System.Drawing.Size(77, 23);
+            InputFileListRemoveButton.TabIndex = 7;
+            InputFileListRemoveButton.Text = "削除";
+            InputFileListRemoveButton.UseVisualStyleBackColor = true;
+            InputFileListRemoveButton.Click += InputFileListRemoveButton_Click;
             // 
             // Form1
             // 
-            this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(617, 411);
-            this.Controls.Add(this.InputFileListRemoveButton);
-            this.Controls.Add(this.InputFileListBox);
-            this.Controls.Add(this.OutputtextBox);
-            this.Controls.Add(this.InputtextBox);
-            this.Controls.Add(this.OutputButton);
-            this.Controls.Add(this.InputButton);
-            this.Controls.Add(this.HenkanButton);
-            this.Controls.Add(this.groupBox1);
-            this.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MaximizeBox = false;
-            this.Name = "Form1";
-            this.Text = "Bakusoku Picture Resize 2";
-            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
-            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AllowDrop = true;
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(617, 411);
+            Controls.Add(InputFileListRemoveButton);
+            Controls.Add(InputFileListBox);
+            Controls.Add(OutputtextBox);
+            Controls.Add(InputtextBox);
+            Controls.Add(OutputButton);
+            Controls.Add(InputButton);
+            Controls.Add(HenkanButton);
+            Controls.Add(groupBox1);
+            Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            MaximizeBox = false;
+            Name = "Form1";
+            Text = "Bakusoku Picture Resize";
+            DragDrop += Form1_DragDrop;
+            DragEnter += Form1_DragEnter;
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
