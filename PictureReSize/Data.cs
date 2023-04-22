@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
 using System.Drawing.Imaging;
-using System.Net.NetworkInformation;
 using System.Windows.Forms;
 
 namespace PictureReSize
@@ -30,7 +28,7 @@ namespace PictureReSize
 
     public static class OutputDataType
     {
-        public static ImageFormat GetImageFormatOutputDataType(string name)
+        public static ImageFormat GetImageFormatOutputDataType(string? name)
         {
             ImageFormat format = name switch
             {

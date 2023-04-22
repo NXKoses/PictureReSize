@@ -1,8 +1,6 @@
 ﻿using PictureReSize.component;
 using System;
-using System.Configuration;
 using System.Diagnostics;
-using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace PictureReSize
@@ -25,6 +23,7 @@ namespace PictureReSize
 
             Data.Appname = this.Text;
             Function.TempDelete();
+            this.Text += " 1.0.0.7";
         }
 
         private void InputButton_Click(object sender, EventArgs e)
@@ -159,14 +158,25 @@ namespace PictureReSize
 
         private void kakucho_button_Click(object sender, EventArgs e)
         {
-            Form ksf = new KakuchoSettingForm();
+            using KakuchoSettingForm ksf = new()
+            {
+                StartPosition = FormStartPosition.Manual,
+                Location = this.Location
+            };
+
             ksf.ShowDialog();
         }
 
         private void settingsave_button_Click(object sender, EventArgs e)
         {
-            var sform = new SettingSaveForm(InputTypetextbox.Text, OutputTypeComboBox.SelectedItem.ToString());
+            using SettingSaveForm sform = new(InputTypetextbox.Text, OutputTypeComboBox.SelectedItem.ToString())
+            {
+                StartPosition = FormStartPosition.Manual,
+                Location = this.Location
+            };
+
             sform.ShowDialog();
         }
+
     }
 }

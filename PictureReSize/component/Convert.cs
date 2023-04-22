@@ -10,7 +10,7 @@ namespace PictureReSize.component
 {
     class Convert
     {
-        private readonly List<string> MoveErrorList = new List<string>();
+        private readonly List<string> MoveErrorList = new();
         private int ActiveFilesLength;
         public void PictureFileCheckAsync()
         {
@@ -20,13 +20,11 @@ namespace PictureReSize.component
                 MessageBox.Show("フォルダの中に変換できるものがありませんでした", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            else
-            {
-                ActiveFilesLength = vs.Length;
 
-                Debug.WriteLine("thread_Value : " + Data.thread_Value + "で実行します。");
-                Resizer(); // 変換実行
-            }
+            ActiveFilesLength = vs.Length;
+
+            Debug.WriteLine("thread_Value : " + Data.thread_Value + "で実行します。");
+            Resizer(); // 変換実行
         }
 
         private async Task Resizer()
@@ -59,15 +57,17 @@ namespace PictureReSize.component
                         resizeHeight = Data.Y;
                     }
 
-                    //画像を縮小する
+                    //画像を変換する
                     using Bitmap resizeBmp = new Bitmap(resizeWidth, resizeHeight);
                     using Graphics g = Graphics.FromImage(resizeBmp);
-                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
+                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                     g.DrawImage(bitmap, 0, 0, resizeWidth, resizeHeight);
 
                     try
                     {
-                        resizeBmp.Save(Path.Combine(Data.OutputFolderPath + @"\", filename + "." + Data.OutputFileType.ToString().ToLower()), Data.OutputFileType);
+                        resizeBmp.Save(
+                            Path.Combine(Data.OutputFolderPath + @"\",
+                                $"{filename}.{Data.OutputFileType.ToString().ToLower()}"), Data.OutputFileType);
                     }
                     catch
                     {

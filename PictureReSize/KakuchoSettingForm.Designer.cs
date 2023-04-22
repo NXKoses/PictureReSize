@@ -28,72 +28,71 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.enter_button = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.thread_Value_textBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            enter_button = new System.Windows.Forms.Button();
+            label1 = new System.Windows.Forms.Label();
+            thread_Value_textBox = new System.Windows.Forms.TextBox();
+            label2 = new System.Windows.Forms.Label();
+            SuspendLayout();
             // 
             // enter_button
             // 
-            this.enter_button.Location = new System.Drawing.Point(114, 78);
-            this.enter_button.Margin = new System.Windows.Forms.Padding(4);
-            this.enter_button.Name = "enter_button";
-            this.enter_button.Size = new System.Drawing.Size(88, 29);
-            this.enter_button.TabIndex = 0;
-            this.enter_button.Text = "決定";
-            this.enter_button.UseVisualStyleBackColor = true;
-            this.enter_button.Click += new System.EventHandler(this.enter_button_Click);
+            enter_button.Location = new System.Drawing.Point(114, 78);
+            enter_button.Margin = new System.Windows.Forms.Padding(4);
+            enter_button.Name = "enter_button";
+            enter_button.Size = new System.Drawing.Size(88, 29);
+            enter_button.TabIndex = 0;
+            enter_button.Text = "決定";
+            enter_button.UseVisualStyleBackColor = true;
+            enter_button.Click += enter_button_Click;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 11);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(101, 15);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "画像変換スレッド数";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(14, 11);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(101, 15);
+            label1.TabIndex = 1;
+            label1.Text = "画像変換スレッド数";
             // 
             // thread_Value_textBox
             // 
-            this.thread_Value_textBox.Location = new System.Drawing.Point(136, 8);
-            this.thread_Value_textBox.Margin = new System.Windows.Forms.Padding(4);
-            this.thread_Value_textBox.Name = "thread_Value_textBox";
-            this.thread_Value_textBox.Size = new System.Drawing.Size(66, 23);
-            this.thread_Value_textBox.TabIndex = 2;
+            thread_Value_textBox.Location = new System.Drawing.Point(136, 8);
+            thread_Value_textBox.Margin = new System.Windows.Forms.Padding(4);
+            thread_Value_textBox.Name = "thread_Value_textBox";
+            thread_Value_textBox.Size = new System.Drawing.Size(66, 23);
+            thread_Value_textBox.TabIndex = 2;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(0, 35);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(164, 30);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "※速さは上がりますが、\r\n増やせば増やすほど重くなります。";
+            label2.AutoSize = true;
+            label2.ForeColor = System.Drawing.Color.Red;
+            label2.Location = new System.Drawing.Point(0, 35);
+            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(164, 30);
+            label2.TabIndex = 3;
+            label2.Text = "※速さは上がりますが、\r\n増やせば増やすほど重くなります。";
             // 
             // KakuchoSettingForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(211, 116);
-            this.ControlBox = false;
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.thread_Value_textBox);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.enter_button);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.MaximizeBox = false;
-            this.Name = "KakuchoSettingForm";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.Text = "KakuchoSettingForm";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(241, 150);
+            ControlBox = false;
+            Controls.Add(label2);
+            Controls.Add(thread_Value_textBox);
+            Controls.Add(label1);
+            Controls.Add(enter_button);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            Margin = new System.Windows.Forms.Padding(4);
+            MaximizeBox = false;
+            Name = "KakuchoSettingForm";
+            ShowIcon = false;
+            ShowInTaskbar = false;
+            Text = "KakuchoSettingForm";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
