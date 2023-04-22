@@ -255,30 +255,31 @@ namespace PictureReSize
             // 
             // Form1
             // 
-            AllowDrop = true;
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(617, 411);
-            Controls.Add(InputFileListRemoveButton);
-            Controls.Add(InputFileListBox);
-            Controls.Add(OutputtextBox);
-            Controls.Add(InputtextBox);
-            Controls.Add(OutputButton);
-            Controls.Add(InputButton);
-            Controls.Add(HenkanButton);
-            Controls.Add(groupBox1);
-            Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            MaximizeBox = false;
-            Name = "Form1";
-            Text = "Bakusoku! Picture Resize";
-            DragDrop += Form1_DragDrop;
-            DragEnter += Form1_DragEnter;
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
-            ResumeLayout(false);
-            PerformLayout();
+            this.AllowDrop = true;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(617, 411);
+            this.Controls.Add(this.InputFileListRemoveButton);
+            this.Controls.Add(this.InputFileListBox);
+            this.Controls.Add(this.OutputtextBox);
+            this.Controls.Add(this.InputtextBox);
+            this.Controls.Add(this.OutputButton);
+            this.Controls.Add(this.InputButton);
+            this.Controls.Add(this.HenkanButton);
+            this.Controls.Add(this.groupBox1);
+            this.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MaximizeBox = false;
+            this.Name = "Form1";
+            this.Text = "Bakusoku Picture Resize 2";
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         #endregion
