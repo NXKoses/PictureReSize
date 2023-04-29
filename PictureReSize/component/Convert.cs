@@ -47,37 +47,37 @@ namespace PictureReSize.component
                 Parallel.ForEach(files, option, stFilePath =>
                 {
                     var filename = Path.GetFileNameWithoutExtension(stFilePath);
-
-                    //各タスクで独立したBitmapオブジェクト
-                    using Bitmap bitmap = new Bitmap(stFilePath);
-                    var resizeWidth = Data.X;
-                    var resizeHeight = (int)((float)bitmap.Height / bitmap.Width * Data.X);
-
-                    if (!Data.aspect_lock) //アスペクト比解除時
-                    {
-                        resizeWidth = Data.X;
-                        resizeHeight = Data.Y;
-                    }
-
-                    //画像を変換する
-                    using Bitmap resizeBmp = new Bitmap(resizeWidth, resizeHeight);
-                    using Graphics g = Graphics.FromImage(resizeBmp);
-                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                    g.DrawImage(bitmap, 0, 0, resizeWidth, resizeHeight);
-
                     try
                     {
+                        //各タスクで独立したBitmapオブジェクト
+                        using Bitmap bitmap = new Bitmap(stFilePath);
+                        var resizeWidth = Data.X;
+                        var resizeHeight = (int)((float)bitmap.Height / bitmap.Width * Data.X);
+
+                        if (!Data.aspect_lock) //アスペクト比解除時
+                        {
+                            resizeWidth = Data.X;
+                            resizeHeight = Data.Y;
+                        }
+
+                        //画像を変換する
+                        using Bitmap resizeBmp = new Bitmap(resizeWidth, resizeHeight);
+                        using Graphics g = Graphics.FromImage(resizeBmp);
+                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                        g.DrawImage(bitmap, 0, 0, resizeWidth, resizeHeight);
+
                         resizeBmp.Save(
                             Path.Combine(Data.OutputFolderPath + @"\",
                                 $"{filename}.{Data.OutputFileType.ToString().ToLower()}"), Data.OutputFileType);
+
+                        cnt++;
                     }
                     catch
                     {
-                        MoveErrorList.Add(filename);
+                        MoveErrorList.Add(stFilePath);
                         Debug.WriteLine("MoveErrorCnt Add :" + filename);
                     }
 
-                    cnt++;
                     Function.Taskbar(cnt, ActiveFilesLength - 1);
                 });
             });

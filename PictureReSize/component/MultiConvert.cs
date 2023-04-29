@@ -47,47 +47,47 @@ namespace PictureReSize.component
                 //並列化
                 Parallel.ForEach(Data.inputFolderListPath, option, folderitem =>
                 {
-                    var vs = System.IO.Directory.GetFiles(folderitem, "*." + Data.InputFileType);
+                    var vs = Directory.GetFiles(folderitem, "*." + Data.InputFileType);
 
-                    Parallel.ForEach(vs, option, pictureitem =>
+                    Parallel.ForEach(vs, option, stFilePath =>
                     {
-                        var filename = Path.GetFileNameWithoutExtension(pictureitem);
-
-                        //各タスクで独立したBitmapオブジェクト
-                        using Bitmap bitmap = new Bitmap(pictureitem);
-                        var resizeWidth = Data.X;
-                        var resizeHeight = (int)((float)bitmap.Height / bitmap.Width * Data.X);
-
-                        if (!Data.aspect_lock) //アスペクト比解除時
-                        {
-                            resizeWidth = Data.X;
-                            resizeHeight = Data.Y;
-                        }
-
-                        //画像を縮小する
-                        using Bitmap resizeBmp = new Bitmap(resizeWidth, resizeHeight);
-                        using Graphics g = Graphics.FromImage(resizeBmp);
-                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
-                        g.DrawImage(bitmap, 0, 0, resizeWidth, resizeHeight);
-
+                        var filename = Path.GetFileNameWithoutExtension(stFilePath);
                         try
                         {
+                            //各タスクで独立したBitmapオブジェクト
+                            using Bitmap bitmap = new Bitmap(stFilePath);
+                            var resizeWidth = Data.X;
+                            var resizeHeight = (int)((float)bitmap.Height / bitmap.Width * Data.X);
+
+                            if (!Data.aspect_lock) //アスペクト比解除時
+                            {
+                                resizeWidth = Data.X;
+                                resizeHeight = Data.Y;
+                            }
+
+                            //画像を縮小する
+                            using Bitmap resizeBmp = new Bitmap(resizeWidth, resizeHeight);
+                            using Graphics g = Graphics.FromImage(resizeBmp);
+                            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
+                            g.DrawImage(bitmap, 0, 0, resizeWidth, resizeHeight);
+
+
                             resizeBmp.Save(Path.Combine(Data.OutputFolderPath + @"\", filename + "." + Data.OutputFileType.ToString().ToLower()), Data.OutputFileType);
+
+                            cnt++;
                         }
                         catch
                         {
-                            MoveErrorList.Add(filename);
+                            MoveErrorList.Add(stFilePath);
                             Debug.WriteLine("MoveErrorCnt Add :" + filename);
                         }
-
-                        cnt++;
                         Function.Taskbar(cnt, ActiveFilesLength - 1);
                     });
                 });
             });
 
             Function.TempDelete();
-            MessageBox.Show(ActiveFilesLength + "/" + cnt + "個変換しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(cnt + "/" + ActiveFilesLength + "個変換しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             if (MoveErrorList.Count != 0)　//エラーが有る場合
             {

@@ -23,7 +23,7 @@ namespace PictureReSize
 
             Data.Appname = this.Text;
             Function.TempDelete();
-            this.Text += " 1.0.1.0";
+            this.Text += " 1.0.1.3";
         }
 
         private void InputButton_Click(object sender, EventArgs e)
@@ -115,45 +115,9 @@ namespace PictureReSize
                 Debug.WriteLine(InputFileListBox.Text);
                 Data.inputFolderListPath.Remove(InputFileListBox.Text);
 
-
                 InputFileListBox.Items.RemoveAt(InputFileListBox.SelectedIndex);
             }
 
-        }
-
-        private void Form1_DragEnter(object sender, DragEventArgs e)
-        {
-            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effect = DragDropEffects.None;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.All;
-            }
-        }
-
-        private void Form1_DragDrop(object sender, DragEventArgs e)
-        {
-            Data.InputFileType = InputTypetextbox.Text;
-            Data.OutputFileType = OutputDataType.GetImageFormatOutputDataType(this.OutputTypeComboBox.SelectedText);
-            Data.X = int.Parse(Xtextbox.Text);
-            Data.Y = int.Parse(Ytextbox.Text);
-            Data.aspect_lock = aspect_ratioCheckBox.Checked;
-
-            if (Data.OutputFolderPath == null)
-            {
-                var selectpath = FolderSelecter.FolderSelect();
-                if (selectpath.Length == 0) return;
-                Data.OutputFolderPath = selectpath + @"\";
-                OutputtextBox.Text = selectpath + @"\";
-
-                Debug.WriteLine("OutputPath: " + selectpath);
-            }
-
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-            var quickcon = new QuickConvert();
-            quickcon.ConvertRun(files);
         }
 
         private void kakucho_button_Click(object sender, EventArgs e)
@@ -177,6 +141,5 @@ namespace PictureReSize
 
             sform.ShowDialog();
         }
-
     }
 }

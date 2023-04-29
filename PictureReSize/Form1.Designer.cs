@@ -273,8 +273,6 @@ namespace PictureReSize
             MaximizeBox = false;
             Name = "Form1";
             Text = "Picture Resize 2";
-            DragDrop += Form1_DragDrop;
-            DragEnter += Form1_DragEnter;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);
