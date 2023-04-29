@@ -45,13 +45,9 @@ namespace PictureReSize.component
                         }
 
                         using Bitmap resizeBmp = new Bitmap(resizeWidth, resizeHeight);
-
                         using Graphics g = Graphics.FromImage(resizeBmp);
-
                         g.DrawImage(bmp, 0, 0, resizeWidth, resizeHeight);
-
                         resizeBmp.Save(System.IO.Path.Combine(Data.GetAppPath() + @"/Temp/", filename + "." + Data.OutputFileType.ToString().ToLower()), Data.OutputFileType);
-
                     }
                     catch
                     {
@@ -79,10 +75,12 @@ namespace PictureReSize.component
 
                 MessageBox.Show(erroritemlist + Environment.NewLine + "以下の画像の移動に失敗しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            //Function.TempDelete();
             Data.converting = false;
         }
 
+        /// <summary>
+        /// Tampフォルダから保存先に移動します。
+        /// </summary>
         private void PictureMove()
         {
             DirectoryInfo target = new DirectoryInfo(Data.GetAppPath() + @"/Temp/");

@@ -23,7 +23,7 @@ namespace PictureReSize
 
             Data.Appname = this.Text;
             Function.TempDelete();
-            this.Text += " 1.0.0.7";
+            this.Text += " 1.0.1.0";
         }
 
         private void InputButton_Click(object sender, EventArgs e)

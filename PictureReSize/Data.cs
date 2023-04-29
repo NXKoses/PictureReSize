@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace PictureReSize
 {
-    static class Data
+    struct Data
     {
         public static string GetAppPath() => Application.StartupPath;
         public static string? Appname;

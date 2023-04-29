@@ -19,7 +19,7 @@ namespace PictureReSize.component
 
             foreach (var item in Data.inputFolderListPath)
             {
-                var vs = System.IO.Directory.GetFiles(item, "*." + Data.InputFileType);
+                var vs = Directory.GetFiles(item, "*." + Data.InputFileType);
                 ActiveFilesLength += vs.Length;
             }
 
@@ -98,7 +98,7 @@ namespace PictureReSize.component
                     erroritemlist += item + Environment.NewLine;
                 }
 
-                MessageBox.Show(erroritemlist + Environment.NewLine + "以下の画像の移動に失敗しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(erroritemlist + Environment.NewLine + "以下の画像の保存に失敗しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             Data.converting = false;
