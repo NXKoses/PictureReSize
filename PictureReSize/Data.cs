@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace PictureReSize
 {
-    struct Data
+    struct AppData
     {
         public static string GetAppPath() => Application.StartupPath;
         public static string? Appname;
@@ -21,7 +21,8 @@ namespace PictureReSize
         public static int Y;
 
         public static bool aspect_lock;
-        public static bool fukusu = false;
+        public static bool multiple_folder_entry = false;
+        public static bool multiple_folder_synchronous_entry = false;
 
         public static int thread_Value = 10;
     }

@@ -19,22 +19,23 @@ namespace PictureReSize
             OutputtextBox.Text = "選択してください";
             InputFileListBox.Visible = false;
             InputFileListRemoveButton.Visible = false;
+            ConvertModeSelect_comboBox.SelectedIndex = 0;
             InputButton.Select();
 
-            Data.Appname = this.Text;
+            AppData.Appname = this.Text;
             Function.TempDelete();
-            this.Text += " 1.0.1.3";
+            this.Text += " 1.0.2.1";
         }
 
         private void InputButton_Click(object sender, EventArgs e)
         {
             var selectpath = FolderSelecter.FolderSelect();
 
-            Data.InputFolderPath = selectpath + @"\";
+            AppData.InputFolderPath = selectpath + @"\";
 
-            if (Data.fukusu)//複数
+            if (AppData.multiple_folder_entry | AppData.multiple_folder_synchronous_entry)//複数
             {
-                Data.inputFolderListPath.Add(selectpath);
+                AppData.inputFolderListPath.Add(selectpath);
                 InputFileListBox.Items.Add(selectpath);
             }
 
@@ -45,30 +46,31 @@ namespace PictureReSize
         private void OutputButton_Click(object sender, EventArgs e)
         {
             var selectpath = FolderSelecter.FolderSelect();
-            Data.OutputFolderPath = selectpath + @"\";
+            AppData.OutputFolderPath = selectpath + @"\";
             OutputtextBox.Text = selectpath + @"\";
             Debug.WriteLine("OutputPath: " + selectpath);
         }
 
         private void HenkanButton_Click(object sender, EventArgs e)
         {
-            if (Data.converting)
+            if (AppData.converting)
             {
                 MessageBox.Show("変換中ですよ！！！　そんなに急がないで(´；ω；｀)", "(´；ω；｀)(´；ω；｀)(´；ω；｀)", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             Function.TempDelete();
 
-            Data.InputFileType = InputTypetextbox.Text;
-            Data.OutputFileType = OutputDataType.GetImageFormatOutputDataType(this.OutputTypeComboBox.SelectedItem.ToString());
-            Data.X = int.Parse(Xtextbox.Text);
-            Data.Y = int.Parse(Ytextbox.Text);
-            Data.aspect_lock = aspect_ratioCheckBox.Checked;
+            AppData.InputFileType = InputTypetextbox.Text;
+            AppData.OutputFileType = OutputDataType.GetImageFormatOutputDataType(this.OutputTypeComboBox.SelectedItem.ToString());
+            AppData.X = int.Parse(Xtextbox.Text);
+            AppData.Y = int.Parse(Ytextbox.Text);
+            AppData.aspect_lock = aspect_ratioCheckBox.Checked;
 
             var inputcheck = 0;
-            if (Data.InputFileType.Length == 0) inputcheck++;
-            if (Data.InputFolderPath == null) inputcheck++;
-            if (Data.OutputFolderPath == null) inputcheck++;
+            if (AppData.InputFileType.Length == 0) inputcheck++;
+            if (AppData.InputFolderPath == null) inputcheck++;
+            if (AppData.OutputFolderPath == null) inputcheck++;
+            if (AppData.multiple_folder_synchronous_entry) inputcheck--;
 
             if (inputcheck != 0)
             {
@@ -76,48 +78,28 @@ namespace PictureReSize
                 return;
             }
 
-            if (Data.fukusu)
+            //複数処理系統だったらマルチ変換クラスを使用します
+            if (AppData.multiple_folder_entry | AppData.multiple_folder_synchronous_entry)
             {
                 var multicon = new MultiConvert();
-                multicon.PictureFileCheck();
+                multicon.Run(this);
                 return;
             }
 
             var con = new component.Convert();
-            con.PictureFileCheckAsync();
-        }
-
-        private void FukusuCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (FukusuCheckbox.Checked)
-            {
-                InputFileListBox.Visible = true;
-                InputFileListRemoveButton.Visible = true;
-                Data.fukusu = true;
-                InputButton.Text = "追加";
-            }
-            else
-            {
-                InputFileListBox.Visible = false;
-                InputFileListRemoveButton.Visible = false;
-                Data.fukusu = false;
-                Data.inputFolderListPath.Clear();
-                InputFileListBox.Items.Clear();
-                InputButton.Text = "入力";
-            }
+            con.Run(this);
         }
 
         private void InputFileListRemoveButton_Click(object sender, EventArgs e)
         {
-            if (Data.fukusu)
+            if (AppData.multiple_folder_entry | AppData.multiple_folder_synchronous_entry)
             {
                 if (InputFileListBox.SelectedIndex == -1) return;
                 Debug.WriteLine(InputFileListBox.Text);
-                Data.inputFolderListPath.Remove(InputFileListBox.Text);
+                AppData.inputFolderListPath.Remove(InputFileListBox.Text);
 
                 InputFileListBox.Items.RemoveAt(InputFileListBox.SelectedIndex);
             }
-
         }
 
         private void kakucho_button_Click(object sender, EventArgs e)
@@ -140,6 +122,51 @@ namespace PictureReSize
             };
 
             sform.ShowDialog();
+        }
+
+        private void ConvertModeSelect_comboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if ((ConvertModeSelect_comboBox.SelectedIndex == 1) | (ConvertModeSelect_comboBox.SelectedIndex == 2))
+            {
+                if (ConvertModeSelect_comboBox.SelectedIndex == 1)
+                {
+                    AppData.multiple_folder_entry = true;
+                    AppData.multiple_folder_synchronous_entry = false;
+                    OutputButton.Visible = true;
+                    OutputtextBox.Visible = true;
+                }
+
+                if (ConvertModeSelect_comboBox.SelectedIndex == 2)
+                {
+                    AppData.multiple_folder_synchronous_entry = true;
+                    AppData.multiple_folder_entry = false;
+                    OutputButton.Visible = false;
+                    OutputtextBox.Visible = false;
+                }
+
+                InputtextBox.Visible = false;
+                InputFileListBox.Visible = true;
+                InputFileListRemoveButton.Visible = true;
+                InputButton.Text = "追加";
+            }
+            else
+            {
+                OutputButton.Visible = true;
+                OutputtextBox.Visible = true;
+                InputtextBox.Visible = true;
+
+                OutputtextBox.Text = AppData.OutputFolderPath;
+                InputtextBox.Text = AppData.InputFolderPath;
+                InputFileListBox.Items.Clear();
+
+                InputFileListBox.Visible = false;
+                InputFileListRemoveButton.Visible = false;
+                AppData.multiple_folder_entry = false;
+                AppData.multiple_folder_synchronous_entry = false;
+                AppData.inputFolderListPath.Clear();
+                InputFileListBox.Items.Clear();
+                InputButton.Text = "入力";
+            }
         }
     }
 }

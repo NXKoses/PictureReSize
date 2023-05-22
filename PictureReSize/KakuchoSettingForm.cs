@@ -8,7 +8,7 @@ namespace PictureReSize
         public KakuchoSettingForm()
         {
             InitializeComponent();
-            thread_Value_textBox.Text = Data.thread_Value.ToString();
+            thread_Value_textBox.Text = AppData.thread_Value.ToString();
         }
 
         private void enter_button_Click(object sender, EventArgs e)
@@ -16,7 +16,7 @@ namespace PictureReSize
             int val;
             if (int.TryParse(thread_Value_textBox.Text, out val) == true)
             {
-                Data.thread_Value = val;
+                AppData.thread_Value = val;
             }
             else
             {

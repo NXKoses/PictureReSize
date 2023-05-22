@@ -12,14 +12,14 @@ namespace PictureReSize.component
     {
         private readonly List<string> MoveErrorList = new();
         private int ActiveFilesLength;
-        //private int ActiveFolderLengh;
-        public void PictureFileCheck()
-        {
-            //ActiveFolderLengh = Data.inputFolderListPath.Count;
+        private Form1 form;
 
-            foreach (var item in Data.inputFolderListPath)
+        public void Run(Form1 form)
+        {
+            this.form = form;
+            foreach (var item in AppData.inputFolderListPath)
             {
-                var vs = Directory.GetFiles(item, "*." + Data.InputFileType);
+                var vs = Directory.GetFiles(item, "*." + AppData.InputFileType);
                 ActiveFilesLength += vs.Length;
             }
 
@@ -32,37 +32,37 @@ namespace PictureReSize.component
             Resizer();
         }
 
-        private async void Resizer()
+        private async Task Resizer()
         {
             int cnt = 0;
-            Data.converting = true;
+            AppData.converting = true;
 
             await Task.Run(() =>
             {
-                ParallelOptions option = new ParallelOptions
+                ParallelOptions option = new()
                 {
-                    MaxDegreeOfParallelism = Data.thread_Value
+                    MaxDegreeOfParallelism = AppData.thread_Value
                 };
 
-                //並列化
-                Parallel.ForEach(Data.inputFolderListPath, option, folderitem =>
+                foreach (var folderitem in AppData.inputFolderListPath)
                 {
-                    var vs = Directory.GetFiles(folderitem, "*." + Data.InputFileType);
+                    var itemlist = Directory.GetFiles(folderitem, "*." + AppData.InputFileType);
 
-                    Parallel.ForEach(vs, option, stFilePath =>
+                    //並列処理
+                    Parallel.ForEach(itemlist, option, item =>
                     {
-                        var filename = Path.GetFileNameWithoutExtension(stFilePath);
+                        var filename = Path.GetFileNameWithoutExtension(item);
                         try
                         {
                             //各タスクで独立したBitmapオブジェクト
-                            using Bitmap bitmap = new Bitmap(stFilePath);
-                            var resizeWidth = Data.X;
-                            var resizeHeight = (int)((float)bitmap.Height / bitmap.Width * Data.X);
+                            using Bitmap bitmap = new Bitmap(item);
+                            var resizeWidth = AppData.X;
+                            var resizeHeight = (int)((float)bitmap.Height / bitmap.Width * AppData.X);
 
-                            if (!Data.aspect_lock) //アスペクト比解除時
+                            if (!AppData.aspect_lock) //アスペクト比解除時
                             {
-                                resizeWidth = Data.X;
-                                resizeHeight = Data.Y;
+                                resizeWidth = AppData.X;
+                                resizeHeight = AppData.Y;
                             }
 
                             //画像を縮小する
@@ -71,21 +71,36 @@ namespace PictureReSize.component
                             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
                             g.DrawImage(bitmap, 0, 0, resizeWidth, resizeHeight);
 
+                            //複数フォルダ入力だったら
+                            if (AppData.multiple_folder_entry)
+                            {
+                                resizeBmp.Save(Path.Combine(AppData.OutputFolderPath + @"\", filename + "." + AppData.OutputFileType.ToString().ToLower()), AppData.OutputFileType);
+                            }
 
-                            resizeBmp.Save(Path.Combine(Data.OutputFolderPath + @"\", filename + "." + Data.OutputFileType.ToString().ToLower()), Data.OutputFileType);
+                            //複数フォルダ同期入力だったら
+                            if (AppData.multiple_folder_synchronous_entry)
+                            {
+                                resizeBmp.Save(Path.Combine(folderitem + @"\", filename + "." + AppData.OutputFileType.ToString().ToLower()), AppData.OutputFileType);
+                            }
 
+                            //カウント
                             cnt++;
+
+                            //formに進捗表示
+                            form.Invoke(() =>
+                            {
+                                form.sintyoku.Text = cnt + " / " + ActiveFilesLength;
+                            });
                         }
                         catch
                         {
-                            MoveErrorList.Add(stFilePath);
+                            MoveErrorList.Add(item);
                             Debug.WriteLine("MoveErrorCnt Add :" + filename);
                         }
                         Function.Taskbar(cnt, ActiveFilesLength - 1);
                     });
-                });
+                }
             });
-
             Function.TempDelete();
             MessageBox.Show(cnt + "/" + ActiveFilesLength + "個変換しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -101,7 +116,7 @@ namespace PictureReSize.component
                 MessageBox.Show(erroritemlist + Environment.NewLine + "以下の画像の保存に失敗しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            Data.converting = false;
+            AppData.converting = false;
         }
     }
 }

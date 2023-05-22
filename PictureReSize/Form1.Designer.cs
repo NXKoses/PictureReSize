@@ -30,10 +30,11 @@ namespace PictureReSize
         private void InitializeComponent()
         {
             groupBox1 = new System.Windows.Forms.GroupBox();
+            label5 = new System.Windows.Forms.Label();
+            ConvertModeSelect_comboBox = new System.Windows.Forms.ComboBox();
             settingsave_button = new System.Windows.Forms.Button();
             OutputTypeComboBox = new System.Windows.Forms.ComboBox();
             kakucho_button = new System.Windows.Forms.Button();
-            FukusuCheckbox = new System.Windows.Forms.CheckBox();
             aspect_ratioCheckBox = new System.Windows.Forms.CheckBox();
             label4 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -49,15 +50,17 @@ namespace PictureReSize
             OutputtextBox = new System.Windows.Forms.TextBox();
             InputFileListBox = new System.Windows.Forms.ListBox();
             InputFileListRemoveButton = new System.Windows.Forms.Button();
+            sintyoku = new System.Windows.Forms.Label();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(label5);
+            groupBox1.Controls.Add(ConvertModeSelect_comboBox);
             groupBox1.Controls.Add(settingsave_button);
             groupBox1.Controls.Add(OutputTypeComboBox);
             groupBox1.Controls.Add(kakucho_button);
-            groupBox1.Controls.Add(FukusuCheckbox);
             groupBox1.Controls.Add(aspect_ratioCheckBox);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(label3);
@@ -70,10 +73,30 @@ namespace PictureReSize
             groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            groupBox1.Size = new System.Drawing.Size(239, 220);
+            groupBox1.Size = new System.Drawing.Size(239, 242);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "基本設定";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(6, 212);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(44, 18);
+            label5.TabIndex = 14;
+            label5.Text = "モード";
+            // 
+            // ConvertModeSelect_comboBox
+            // 
+            ConvertModeSelect_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            ConvertModeSelect_comboBox.FormattingEnabled = true;
+            ConvertModeSelect_comboBox.Items.AddRange(new object[] { "通常変換", "複数フォルダ入力", "複数フォルダ同期入出力" });
+            ConvertModeSelect_comboBox.Location = new System.Drawing.Point(56, 208);
+            ConvertModeSelect_comboBox.Name = "ConvertModeSelect_comboBox";
+            ConvertModeSelect_comboBox.Size = new System.Drawing.Size(177, 26);
+            ConvertModeSelect_comboBox.TabIndex = 13;
+            ConvertModeSelect_comboBox.SelectedIndexChanged += ConvertModeSelect_comboBox_SelectedIndexChanged;
             // 
             // settingsave_button
             // 
@@ -96,24 +119,13 @@ namespace PictureReSize
             // 
             // kakucho_button
             // 
-            kakucho_button.Location = new System.Drawing.Point(129, 183);
+            kakucho_button.Location = new System.Drawing.Point(155, 172);
             kakucho_button.Name = "kakucho_button";
             kakucho_button.Size = new System.Drawing.Size(78, 30);
             kakucho_button.TabIndex = 10;
             kakucho_button.Text = "拡張設定";
             kakucho_button.UseVisualStyleBackColor = true;
             kakucho_button.Click += kakucho_button_Click;
-            // 
-            // FukusuCheckbox
-            // 
-            FukusuCheckbox.AutoSize = true;
-            FukusuCheckbox.Location = new System.Drawing.Point(9, 191);
-            FukusuCheckbox.Name = "FukusuCheckbox";
-            FukusuCheckbox.Size = new System.Drawing.Size(75, 22);
-            FukusuCheckbox.TabIndex = 9;
-            FukusuCheckbox.Text = "複数選択";
-            FukusuCheckbox.UseVisualStyleBackColor = true;
-            FukusuCheckbox.CheckedChanged += FukusuCheckbox_CheckedChanged;
             // 
             // aspect_ratioCheckBox
             // 
@@ -188,7 +200,7 @@ namespace PictureReSize
             // HenkanButton
             // 
             HenkanButton.Font = new System.Drawing.Font("メイリオ", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            HenkanButton.Location = new System.Drawing.Point(12, 342);
+            HenkanButton.Location = new System.Drawing.Point(12, 364);
             HenkanButton.Name = "HenkanButton";
             HenkanButton.Size = new System.Drawing.Size(593, 65);
             HenkanButton.TabIndex = 1;
@@ -199,7 +211,7 @@ namespace PictureReSize
             // InputButton
             // 
             InputButton.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            InputButton.Location = new System.Drawing.Point(12, 240);
+            InputButton.Location = new System.Drawing.Point(12, 262);
             InputButton.Name = "InputButton";
             InputButton.Size = new System.Drawing.Size(295, 65);
             InputButton.TabIndex = 2;
@@ -210,7 +222,7 @@ namespace PictureReSize
             // OutputButton
             // 
             OutputButton.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            OutputButton.Location = new System.Drawing.Point(313, 240);
+            OutputButton.Location = new System.Drawing.Point(313, 262);
             OutputButton.Name = "OutputButton";
             OutputButton.Size = new System.Drawing.Size(292, 65);
             OutputButton.TabIndex = 3;
@@ -220,7 +232,7 @@ namespace PictureReSize
             // 
             // InputtextBox
             // 
-            InputtextBox.Location = new System.Drawing.Point(12, 311);
+            InputtextBox.Location = new System.Drawing.Point(12, 333);
             InputtextBox.Name = "InputtextBox";
             InputtextBox.ReadOnly = true;
             InputtextBox.Size = new System.Drawing.Size(295, 25);
@@ -228,7 +240,7 @@ namespace PictureReSize
             // 
             // OutputtextBox
             // 
-            OutputtextBox.Location = new System.Drawing.Point(313, 311);
+            OutputtextBox.Location = new System.Drawing.Point(313, 333);
             OutputtextBox.Name = "OutputtextBox";
             OutputtextBox.ReadOnly = true;
             OutputtextBox.Size = new System.Drawing.Size(292, 25);
@@ -253,12 +265,21 @@ namespace PictureReSize
             InputFileListRemoveButton.UseVisualStyleBackColor = true;
             InputFileListRemoveButton.Click += InputFileListRemoveButton_Click;
             // 
+            // sintyoku
+            // 
+            sintyoku.AutoSize = true;
+            sintyoku.Location = new System.Drawing.Point(265, 221);
+            sintyoku.Name = "sintyoku";
+            sintyoku.Size = new System.Drawing.Size(0, 18);
+            sintyoku.TabIndex = 8;
+            // 
             // Form1
             // 
             AllowDrop = true;
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(617, 411);
+            ClientSize = new System.Drawing.Size(617, 441);
+            Controls.Add(sintyoku);
             Controls.Add(InputFileListRemoveButton);
             Controls.Add(InputFileListBox);
             Controls.Add(OutputtextBox);
@@ -295,12 +316,14 @@ namespace PictureReSize
         private System.Windows.Forms.TextBox OutputtextBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox aspect_ratioCheckBox;
-        private System.Windows.Forms.CheckBox FukusuCheckbox;
         private System.Windows.Forms.ListBox InputFileListBox;
         private System.Windows.Forms.Button InputFileListRemoveButton;
         private System.Windows.Forms.Button kakucho_button;
         private System.Windows.Forms.ComboBox OutputTypeComboBox;
         private System.Windows.Forms.Button settingsave_button;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox ConvertModeSelect_comboBox;
+        public System.Windows.Forms.Label sintyoku;
     }
 }
 

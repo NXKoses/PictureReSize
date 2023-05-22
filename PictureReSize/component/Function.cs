@@ -7,8 +7,8 @@ namespace PictureReSize.component
     {
         public static void TempDelete()
         {
-            DirectoryInfo target = new DirectoryInfo(Data.GetAppPath() + @"/Temp/");
-            if (!Directory.Exists(Data.GetAppPath() + @"/Temp/")) target.Create();
+            DirectoryInfo target = new DirectoryInfo(AppData.GetAppPath() + @"/Temp/");
+            if (!Directory.Exists(AppData.GetAppPath() + @"/Temp/")) target.Create();
             foreach (FileInfo file in target.GetFiles())
             {
                 file.Delete();
