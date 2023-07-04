@@ -34,7 +34,6 @@ namespace PictureReSize
             ImageFormat format = name switch
             {
                 "bmp" => ImageFormat.Bmp,
-                "icon" => ImageFormat.Icon,
                 "jpeg" => ImageFormat.Jpeg,
                 "png" => ImageFormat.Png,
                 _ => ImageFormat.Jpeg,
@@ -46,9 +45,8 @@ namespace PictureReSize
             int intformat = name switch
             {
                 "bmp" => 0,
-                "icon" => 1,
-                "jpeg" => 2,
-                "png" => 3,
+                "jpeg" => 1,
+                "png" => 2,
                 _ => 2,
             }; ;
             return intformat;
@@ -58,9 +56,8 @@ namespace PictureReSize
             string intformat = v switch
             {
                 0 => "bmp",
-                1 => "icon",
-                2 => "jpeg",
-                3 => "png",
+                1 => "jpeg",
+                2 => "png",
                 _ => "jpeg",
             }; ;
             return intformat;

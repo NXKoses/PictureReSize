@@ -14,7 +14,15 @@ namespace PictureReSize.component
             };
 
             // ダイアログを表示
-            return dialog.ShowDialog() == CommonFileDialogResult.Ok ? dialog.FileName : "";
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+
+                return dialog.FileName;
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
     }
 }

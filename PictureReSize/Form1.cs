@@ -24,30 +24,41 @@ namespace PictureReSize
 
             AppData.Appname = this.Text;
             Function.TempDelete();
-            this.Text += " 1.0.2.1";
+            this.Text += " 1.0.3.0";
         }
 
         private void InputButton_Click(object sender, EventArgs e)
         {
+            //画面表示
             var selectpath = FolderSelecter.FolderSelect();
 
+            //何もしなかったら戻る
+            if (selectpath == string.Empty) return;
+
             AppData.InputFolderPath = selectpath + @"\";
-
-            if (AppData.multiple_folder_entry | AppData.multiple_folder_synchronous_entry)//複数
-            {
-                AppData.inputFolderListPath.Add(selectpath);
-                InputFileListBox.Items.Add(selectpath);
-            }
-
             InputtextBox.Text = selectpath + @"\";
+
+            //変換リストに追加する
+            AppData.inputFolderListPath.Add(selectpath);
+
+            //表示用
+            InputFileListBox.Items.Add(selectpath);
+
+
             Debug.WriteLine("InputPath: " + selectpath);
         }
 
         private void OutputButton_Click(object sender, EventArgs e)
         {
+            //画面表示
             var selectpath = FolderSelecter.FolderSelect();
+
+            //何もしなかったら戻る
+            if (selectpath == string.Empty) return;
+
             AppData.OutputFolderPath = selectpath + @"\";
             OutputtextBox.Text = selectpath + @"\";
+
             Debug.WriteLine("OutputPath: " + selectpath);
         }
 
@@ -55,9 +66,10 @@ namespace PictureReSize
         {
             if (AppData.converting)
             {
-                MessageBox.Show("変換中ですよ！！！　そんなに急がないで(´；ω；｀)", "(´；ω；｀)(´；ω；｀)(´；ω；｀)", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("変換中です。　そんなに急がないで(´；ω；｀)", "（＜・＞ω＜・＞）", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+
             Function.TempDelete();
 
             AppData.InputFileType = InputTypetextbox.Text;
@@ -68,8 +80,8 @@ namespace PictureReSize
 
             var inputcheck = 0;
             if (AppData.InputFileType.Length == 0) inputcheck++;
-            if (AppData.InputFolderPath == null) inputcheck++;
-            if (AppData.OutputFolderPath == null) inputcheck++;
+            if (AppData.InputFolderPath == string.Empty) inputcheck++;
+            if (AppData.OutputFolderPath == string.Empty) inputcheck++;
             if (AppData.multiple_folder_synchronous_entry) inputcheck--;
 
             if (inputcheck != 0)
@@ -77,22 +89,14 @@ namespace PictureReSize
                 MessageBox.Show("入力内容を確認してください", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-
-            //複数処理系統だったらマルチ変換クラスを使用します
-            if (AppData.multiple_folder_entry | AppData.multiple_folder_synchronous_entry)
-            {
-                var multicon = new MultiConvert();
-                multicon.Run(this);
-                return;
-            }
-
-            var con = new component.Convert();
-            con.Run(this);
+            
+            //変換実行
+            new component.Convert().Run(this);
         }
 
         private void InputFileListRemoveButton_Click(object sender, EventArgs e)
         {
-            if (AppData.multiple_folder_entry | AppData.multiple_folder_synchronous_entry)
+            if (AppData.multiple_folder_entry || AppData.multiple_folder_synchronous_entry)
             {
                 if (InputFileListBox.SelectedIndex == -1) return;
                 Debug.WriteLine(InputFileListBox.Text);
@@ -124,8 +128,18 @@ namespace PictureReSize
             sform.ShowDialog();
         }
 
+        /// <summary>
+        /// comboboxの選択肢によってformの表示を切り替えます
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ConvertModeSelect_comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //初期化
+            AppData.inputFolderListPath.Clear();
+            AppData.InputFolderPath = string.Empty;
+            AppData.OutputFolderPath = string.Empty;
+
             if ((ConvertModeSelect_comboBox.SelectedIndex == 1) | (ConvertModeSelect_comboBox.SelectedIndex == 2))
             {
                 if (ConvertModeSelect_comboBox.SelectedIndex == 1)

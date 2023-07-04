@@ -111,7 +111,7 @@ namespace PictureReSize
             // OutputTypeComboBox
             // 
             OutputTypeComboBox.FormattingEnabled = true;
-            OutputTypeComboBox.Items.AddRange(new object[] { "bmp", "icon", "jpeg", "png" });
+            OutputTypeComboBox.Items.AddRange(new object[] { "bmp", "jpeg", "png" });
             OutputTypeComboBox.Location = new System.Drawing.Point(108, 101);
             OutputTypeComboBox.Name = "OutputTypeComboBox";
             OutputTypeComboBox.Size = new System.Drawing.Size(75, 26);
