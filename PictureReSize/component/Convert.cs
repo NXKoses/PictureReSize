@@ -95,13 +95,14 @@ namespace PictureReSize.component
                             lock (lockobject)
                             {
                                 cnt++;
+
+                                //formに進捗表示
+                                form.Invoke(() =>
+                                {
+                                    form.sintyoku.Text = cnt + " / " + ActiveFilesLength;
+                                });
                             }
 
-                            //formに進捗表示
-                            form.Invoke(() =>
-                            {
-                                form.sintyoku.Text = cnt + " / " + ActiveFilesLength;
-                            });
                         }
                         catch
                         {
