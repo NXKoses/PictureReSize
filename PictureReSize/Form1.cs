@@ -24,7 +24,7 @@ namespace PictureReSize
 
             AppData.Appname = this.Text;
             Function.TempDelete();
-            this.Text += " 1.0.3.0";
+            this.Text += " 1.0.4.0";
         }
 
         private void InputButton_Click(object sender, EventArgs e)
@@ -35,15 +35,11 @@ namespace PictureReSize
             //何もしなかったら戻る
             if (selectpath == string.Empty) return;
 
-            AppData.InputFolderPath = selectpath + @"\";
+            //Formに表示
             InputtextBox.Text = selectpath + @"\";
 
             //変換リストに追加する
-            AppData.inputFolderListPath.Add(selectpath);
-
-            //表示用
-            InputFileListBox.Items.Add(selectpath);
-
+            Change_input_list_Add(selectpath);
 
             Debug.WriteLine("InputPath: " + selectpath);
         }
@@ -56,7 +52,10 @@ namespace PictureReSize
             //何もしなかったら戻る
             if (selectpath == string.Empty) return;
 
+            //出力先フォルダを入れておく
             AppData.OutputFolderPath = selectpath + @"\";
+
+            //Formに表示
             OutputtextBox.Text = selectpath + @"\";
 
             Debug.WriteLine("OutputPath: " + selectpath);
@@ -80,7 +79,6 @@ namespace PictureReSize
 
             var inputcheck = 0;
             if (AppData.InputFileType.Length == 0) inputcheck++;
-            if (AppData.InputFolderPath == string.Empty) inputcheck++;
             if (AppData.OutputFolderPath == string.Empty) inputcheck++;
             if (AppData.multiple_folder_synchronous_entry) inputcheck--;
 
@@ -96,12 +94,14 @@ namespace PictureReSize
 
         private void InputFileListRemoveButton_Click(object sender, EventArgs e)
         {
-            if (AppData.multiple_folder_entry || AppData.multiple_folder_synchronous_entry)
+            if (AppData.multiple_folder_entry | AppData.multiple_folder_synchronous_entry)
             {
                 if (InputFileListBox.SelectedIndex == -1) return;
-                Debug.WriteLine(InputFileListBox.Text);
-                AppData.inputFolderListPath.Remove(InputFileListBox.Text);
 
+                Debug.WriteLine(InputFileListBox.Text);
+
+                //変換リスト、Formから削除
+                AppData.inputFolderListPath.Remove(InputFileListBox.Text);
                 InputFileListBox.Items.RemoveAt(InputFileListBox.SelectedIndex);
             }
         }
@@ -129,6 +129,19 @@ namespace PictureReSize
         }
 
         /// <summary>
+        /// 変換リストに指定したパスを追加します。
+        /// </summary>
+        /// <param name="inputpath"></param>
+        private void Change_input_list_Add(string inputpath)
+        {
+            //変換リストに追加する
+            AppData.inputFolderListPath.Add(inputpath);
+
+            //表示用
+            InputFileListBox.Items.Add(inputpath);
+        }
+
+        /// <summary>
         /// comboboxの選択肢によってformの表示を切り替えます
         /// </summary>
         /// <param name="sender"></param>
@@ -137,7 +150,7 @@ namespace PictureReSize
         {
             //初期化
             AppData.inputFolderListPath.Clear();
-            AppData.InputFolderPath = string.Empty;
+            InputFileListBox.Items.Clear();
             AppData.OutputFolderPath = string.Empty;
 
             if ((ConvertModeSelect_comboBox.SelectedIndex == 1) | (ConvertModeSelect_comboBox.SelectedIndex == 2))
@@ -170,15 +183,11 @@ namespace PictureReSize
                 InputtextBox.Visible = true;
 
                 OutputtextBox.Text = AppData.OutputFolderPath;
-                InputtextBox.Text = AppData.InputFolderPath;
-                InputFileListBox.Items.Clear();
-
+                InputtextBox.Text = "";
                 InputFileListBox.Visible = false;
                 InputFileListRemoveButton.Visible = false;
                 AppData.multiple_folder_entry = false;
                 AppData.multiple_folder_synchronous_entry = false;
-                AppData.inputFolderListPath.Clear();
-                InputFileListBox.Items.Clear();
                 InputButton.Text = "入力";
             }
         }
