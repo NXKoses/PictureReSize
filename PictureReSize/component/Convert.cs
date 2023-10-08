@@ -51,7 +51,7 @@ namespace PictureReSize.component
         /// <summary>
         /// 変換モード
         /// </summary>
-        public ConvertMode ConvertMode { get; set; }
+        public Program.ConvertMode ConvertMode { get; set; }
 
         /// <summary>
         /// スレッド数
@@ -66,12 +66,22 @@ namespace PictureReSize.component
         public async void Convert_Run(Form1 form)
         {
             this.form = form;
-            foreach (var item in InputFolderListPath)
+
+            //出力フォルダの存在確認
+            //ConvertMode.Multiple_Folder_Syncの場合は入力フォルダと出力フォルダが同じになるので確認しない
+            if (!Directory.Exists(OutputFolderPath) & ConvertMode != Program.ConvertMode.Multiple_Folder_Sync)
             {
-                var vs = Directory.GetFiles(item, "*." + InputFileType);
-                activeFilesLength += vs.Length;
+                MessageBox.Show("出力フォルダが存在しません", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
 
+            //入力フォルダの変換できるファイル数をカウント
+            foreach (var item in InputFolderListPath)
+            {
+                activeFilesLength += Directory.GetFiles(item, "*." + InputFileType).Length;
+            }
+
+            //変換できるファイルが無い場合
             if (activeFilesLength == 0)
             {
                 MessageBox.Show("フォルダの中に変換できるものがありませんでした", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -79,7 +89,7 @@ namespace PictureReSize.component
             }
 
             //変換処理
-            await Task.Run(() => Resizer());
+            _ = Task.Run (() => Resizer());
         }
 
         private void Resizer()
@@ -115,6 +125,7 @@ namespace PictureReSize.component
                             resizeHeight = Y;
                         }
 
+
                         //画像を縮小する
                         using Bitmap resizeBmp = new(resizeWidth, resizeHeight);
                         using Graphics g = Graphics.FromImage(resizeBmp);
@@ -124,15 +135,15 @@ namespace PictureReSize.component
                         //画像を保存（モードに合わせて）
                         switch (ConvertMode)
                         {
-                            case ConvertMode.Normal:
+                            case Program.ConvertMode.Normal:
                                 resizeBmp.Save(Path.Combine(OutputFolderPath + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), OutputFileType);
                                 break;
 
-                            case ConvertMode.Multiple:
+                            case Program.ConvertMode.Multiple:
                                 resizeBmp.Save(Path.Combine(OutputFolderPath + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), OutputFileType);
                                 break;
 
-                            case ConvertMode.Multiple_Folder_Sync:
+                            case Program.ConvertMode.Multiple_Folder_Sync:
                                 resizeBmp.Save(Path.Combine(folderitem + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), OutputFileType);
                                 break;
 
@@ -167,7 +178,7 @@ namespace PictureReSize.component
             }
 
             MessageBox.Show(cnt + "/" + activeFilesLength + "個変換しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            AppSettingData.Converting = false;
+            Program.Converting = false;
 
             if (!moveErrorList.IsEmpty)     //エラーが有る場合
             {

@@ -32,7 +32,7 @@ namespace PictureReSize
             ConvertModeSelect_comboBox.SelectedIndex = 0;
             InputButton.Select();
 
-            this.Text += " ver: 2.0.0.0";
+            this.Text += " ver: 2.0.0.1";
         }
 
         private void InputButton_Click(object sender, EventArgs e)
@@ -75,7 +75,7 @@ namespace PictureReSize
         /// <returns>0 正常</returns>
         private int Form_InputCheck()
         {
-            if (AppSettingData.Converting)
+            if (Program.Converting)
             {
                 MessageBox.Show("変換中です。　そんなに急がないで(´；ω；｀)", "（＜・＞ω＜・＞）", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return -1;
@@ -141,15 +141,12 @@ namespace PictureReSize
                 Y = int.Parse(Ytextbox.Text),                                       //変換後のY解像度
                 Aspect_lock = aspect_ratioCheckBox.Checked,                         //アスペクト比ロック
 
-                ConvertMode = (ConvertMode)ConvertModeSelect_comboBox.SelectedIndex,//変換モード
+                ConvertMode = (Program.ConvertMode)ConvertModeSelect_comboBox.SelectedIndex,//変換モード
                 Thread_Value = 10                                                   //並列同期数
             };
 
-            //Tempフォルダの中身をきれいにしておく
-            Function.TempDelete();
-
             //変換実行
-            AppSettingData.Converting = true;
+            Program.Converting = true;
             cvt.Convert_Run(this);
         }
 

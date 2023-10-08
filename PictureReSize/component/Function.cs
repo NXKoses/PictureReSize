@@ -5,16 +5,6 @@ namespace PictureReSize.component
 {
     class Function
     {
-        public static void TempDelete()
-        {
-            DirectoryInfo target = new DirectoryInfo(AppSettingData.GetAppPath() + @"/Temp/");
-            if (!Directory.Exists(AppSettingData.GetAppPath() + @"/Temp/")) target.Create();
-            foreach (FileInfo file in target.GetFiles())
-            {
-                file.Delete();
-            }
-        }
-
         public static void Taskbar(int cnt, int max)
         {
             if (max <= cnt)
