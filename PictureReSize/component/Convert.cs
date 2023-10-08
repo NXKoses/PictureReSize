@@ -1,135 +1,186 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+#pragma warning disable CA1416 // プラットフォームの互換性を検証
 namespace PictureReSize.component
 {
     class Convert
     {
-#pragma warning disable CA1416 // プラットフォームの互換性を検証
-        private readonly List<string> MoveErrorList = new();
-        private int ActiveFilesLength;
-        private Form1 form;
+        /// <summary>
+        /// 出力フォルダ
+        /// </summary>
+        public string? OutputFolderPath { get; set; }
 
-        public async void Run(Form1 form)
+        /// <summary>
+        /// 入力フォルダリスト
+        /// </summary>
+        public List<string> InputFolderListPath { get; set; } = new();
+
+        /// <summary>
+        /// 入力ファイル形式
+        /// </summary>
+        public string? InputFileType { get; set; }
+
+        /// <summary>
+        /// 出力ファイル形式
+        /// </summary>
+        public ImageFormat? OutputFileType { get; set; }
+
+        /// <summary>
+        /// 変換後の解像度X
+        /// </summary>
+        public int X { get; set; }
+
+        /// <summary>
+        /// 変換後の解像度Y
+        /// </summary>
+        public int Y { get; set; }
+
+        /// <summary>
+        /// アスペクト比ロック
+        /// </summary>
+        public bool Aspect_lock { get; set; } = false;
+
+        /// <summary>
+        /// 変換モード
+        /// </summary>
+        public ConvertMode ConvertMode { get; set; }
+
+        /// <summary>
+        /// スレッド数
+        /// </summary>
+        public int Thread_Value { get; set; } = 10;
+
+        private static Object lockobject = new();
+        private ConcurrentQueue<string> moveErrorList = new();
+        private int activeFilesLength;
+        private Form1? form;
+
+        public async void Convert_Run(Form1 form)
         {
             this.form = form;
-            foreach (var item in AppData.inputFolderListPath)
+            foreach (var item in InputFolderListPath)
             {
-                var vs = Directory.GetFiles(item, "*." + AppData.InputFileType);
-                ActiveFilesLength += vs.Length;
+                var vs = Directory.GetFiles(item, "*." + InputFileType);
+                activeFilesLength += vs.Length;
             }
 
-            if (ActiveFilesLength == 0)
+            if (activeFilesLength == 0)
             {
                 MessageBox.Show("フォルダの中に変換できるものがありませんでした", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            await Resizer();
+            //変換処理
+            await Task.Run(() => Resizer());
         }
 
-        private async Task Resizer()
+        private void Resizer()
         {
             int cnt = 0;
-            AppData.converting = true;
-            Object lockobject = new();
 
-            await Task.Run(() =>
+            ParallelOptions option = new()
             {
-                ParallelOptions option = new()
-                {
-                    MaxDegreeOfParallelism = AppData.thread_Value
-                };
+                MaxDegreeOfParallelism = Thread_Value
+            };
 
-                foreach (var folderitem in AppData.inputFolderListPath)
+            foreach (var folderitem in InputFolderListPath)
+            {
+                var itemlist = Directory.GetFiles(folderitem, "*." + InputFileType);
+
+                //並列処理
+                Parallel.ForEach(itemlist, option, item =>
                 {
-                    var itemlist = Directory.GetFiles(folderitem, "*." + AppData.InputFileType);
-                    //並列処理
-                    Parallel.ForEach(itemlist, option, item =>
+                    var filename = Path.GetFileNameWithoutExtension(item);
+                    try
                     {
-                        var filename = Path.GetFileNameWithoutExtension(item);
-                        try
+                        //各タスクで独立したBitmapオブジェクトを作成
+                        using Bitmap bitmap = new(item);
+
+                        //アスペクト比計算
+                        var resizeWidth = X;
+                        var resizeHeight = (int)((float)bitmap.Height / bitmap.Width * X);
+
+                        //アスペクト比解除時
+                        if (!Aspect_lock)
                         {
-                            //各タスクで独立したBitmapオブジェクトを作成
-                            using Bitmap bitmap = new Bitmap(item);
-
-                            //アスペクト比計算
-                            var resizeWidth = AppData.X;
-                            var resizeHeight = (int)((float)bitmap.Height / bitmap.Width * AppData.X);
-
-                            //アスペクト比解除時
-                            if (!AppData.aspect_lock)
-                            {
-                                resizeWidth = AppData.X;
-                                resizeHeight = AppData.Y;
-                            }
-
-                            //画像を縮小する
-                            using Bitmap resizeBmp = new Bitmap(resizeWidth, resizeHeight);
-                            using Graphics g = Graphics.FromImage(resizeBmp);
-                            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                            g.DrawImage(bitmap, 0, 0, resizeWidth, resizeHeight);
-
-                            //複数フォルダ入力だったら
-                            if (AppData.multiple_folder_entry)
-                            {
-                                resizeBmp.Save(Path.Combine(AppData.OutputFolderPath + @"\", filename + "." + AppData.OutputFileType.ToString().ToLower()), AppData.OutputFileType);
-                            }
-                            //複数フォルダ同期入力だったら
-                            else if (AppData.multiple_folder_synchronous_entry)
-                            {
-                                resizeBmp.Save(Path.Combine(folderitem + @"\", filename + "." + AppData.OutputFileType.ToString().ToLower()), AppData.OutputFileType);
-                            }
-                            //それ以外だったら（通常変換）
-                            else
-                            {
-                                resizeBmp.Save(Path.Combine(AppData.OutputFolderPath + @"\", $"{filename}.{AppData.OutputFileType.ToString().ToLower()}"), AppData.OutputFileType);
-                            }
-
-                            //カウント
-                            lock (lockobject)
-                            {
-                                cnt++;
-
-                                //formに進捗表示
-                                form.Invoke(() =>
-                                {
-                                    form.sintyoku.Text = cnt + " / " + ActiveFilesLength;
-                                });
-                            }
-
+                            resizeWidth = X;
+                            resizeHeight = Y;
                         }
-                        catch
+
+                        //画像を縮小する
+                        using Bitmap resizeBmp = new(resizeWidth, resizeHeight);
+                        using Graphics g = Graphics.FromImage(resizeBmp);
+                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                        g.DrawImage(bitmap, 0, 0, resizeWidth, resizeHeight);
+
+                        //画像を保存（モードに合わせて）
+                        switch (ConvertMode)
                         {
-                            MoveErrorList.Add(item);
+                            case ConvertMode.Normal:
+                                resizeBmp.Save(Path.Combine(OutputFolderPath + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), OutputFileType);
+                                break;
+
+                            case ConvertMode.Multiple:
+                                resizeBmp.Save(Path.Combine(OutputFolderPath + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), OutputFileType);
+                                break;
+
+                            case ConvertMode.Multiple_Folder_Sync:
+                                resizeBmp.Save(Path.Combine(folderitem + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), OutputFileType);
+                                break;
+
+                            default:
+                                throw new Exception("変換モードが設定されていません。");
+                        }
+
+                        //カウント
+                        lock (lockobject)
+                        {
+                            cnt++;
+                        }
+                    }
+                    catch
+                    {
+                        lock (lockobject)
+                        {
+                            moveErrorList.Enqueue(item);
                             Debug.WriteLine("MoveErrorCnt Add :" + filename);
                         }
-                        Function.Taskbar(cnt, ActiveFilesLength - 1);
-                    });
-                }
-            });
-            Function.TempDelete();
-            MessageBox.Show(cnt + "/" + ActiveFilesLength + "個変換しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
 
-            if (MoveErrorList.Count != 0)　//エラーが有る場合
+                    //formに進捗表示
+                    form?.Invoke(() =>
+                    {
+                        form.sintyoku.Text = cnt + " / " + activeFilesLength;
+                        Debug.WriteLine("Converted :" + filename);
+                    });
+
+                    Function.Taskbar(cnt, activeFilesLength - 1);
+                });
+            }
+
+            MessageBox.Show(cnt + "/" + activeFilesLength + "個変換しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            AppSettingData.Converting = false;
+
+            if (!moveErrorList.IsEmpty)     //エラーが有る場合
             {
                 string erroritemlist = "";
 
-                foreach (var item in MoveErrorList)
+                foreach (var item in moveErrorList)
                 {
                     erroritemlist += item + Environment.NewLine;
                 }
 
-                MessageBox.Show(erroritemlist + Environment.NewLine + "以下の画像の保存に失敗しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                MoveErrorList.Clear();
+                MessageBox.Show(erroritemlist + Environment.NewLine + "以下の画像の変換（保存）に失敗しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                moveErrorList.Clear();      //エラー履歴を削除
             }
-
-            AppData.converting = false;
         }
     }
 }

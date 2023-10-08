@@ -1,20 +1,30 @@
 ﻿using PictureReSize.component;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace PictureReSize
 {
     public partial class Form1 : Form
     {
+        private List<string> inputFolder_list_path = new();
+        private string output_path = "";
+
         public Form1()
         {
             InitializeComponent();
+
+            //コントロールの初期化
             Xtextbox.Text = "1920";
             Ytextbox.Text = "1080";
+
+            //設定から呼び出す
             InputTypetextbox.Text = Properties.Settings.Default.IntputFileType;
-            OutputTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             OutputTypeComboBox.SelectedIndex = Properties.Settings.Default.OutputFileType;
+
+            OutputTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             InputtextBox.Text = "選択してください";
             OutputtextBox.Text = "選択してください";
             InputFileListBox.Visible = false;
@@ -22,9 +32,7 @@ namespace PictureReSize
             ConvertModeSelect_comboBox.SelectedIndex = 0;
             InputButton.Select();
 
-            AppData.Appname = this.Text;
-            Function.TempDelete();
-            this.Text += " 1.0.4.0";
+            this.Text += " ver: 2.0.0.0";
         }
 
         private void InputButton_Click(object sender, EventArgs e)
@@ -53,7 +61,7 @@ namespace PictureReSize
             if (selectpath == string.Empty) return;
 
             //出力先フォルダを入れておく
-            AppData.OutputFolderPath = selectpath + @"\";
+            output_path = selectpath + @"\";
 
             //Formに表示
             OutputtextBox.Text = selectpath + @"\";
@@ -61,71 +69,107 @@ namespace PictureReSize
             Debug.WriteLine("OutputPath: " + selectpath);
         }
 
-        private void HenkanButton_Click(object sender, EventArgs e)
+        /// <summary>
+        /// 画面に正しい情報が入力されているかチェックします。
+        /// </summary>
+        /// <returns>0 正常</returns>
+        private int Form_InputCheck()
         {
-            if (AppData.converting)
+            if (AppSettingData.Converting)
             {
                 MessageBox.Show("変換中です。　そんなに急がないで(´；ω；｀)", "（＜・＞ω＜・＞）", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                return -1;
             }
 
-            Function.TempDelete();
-
-            AppData.InputFileType = InputTypetextbox.Text;
-            AppData.OutputFileType = OutputDataType.GetImageFormatOutputDataType(this.OutputTypeComboBox.SelectedItem.ToString());
-            AppData.X = int.Parse(Xtextbox.Text);
-            AppData.Y = int.Parse(Ytextbox.Text);
-            AppData.aspect_lock = aspect_ratioCheckBox.Checked;
-
-            var inputcheck = 0;
-            if (AppData.InputFileType.Length == 0) inputcheck++;
-            if (AppData.OutputFolderPath == string.Empty) inputcheck++;
-            if (AppData.multiple_folder_synchronous_entry) inputcheck--;
-
-            if (inputcheck != 0)
+            if (inputFolder_list_path.Count <= 0)
             {
-                MessageBox.Show("入力内容を確認してください", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                MessageBox.Show("変換するフォルダを選択してください", "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return -2;
             }
-            
-            //変換実行
-            new component.Convert().Run(this);
+
+            if (output_path.Length <= 0 & ConvertModeSelect_comboBox.SelectedIndex != 2)
+            {
+                MessageBox.Show("出力先フォルダを選択してください", "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return -3;
+            }
+
+            if (Xtextbox.Text.Length <= 0 | Ytextbox.Text.Length <= 0 | InputTypetextbox.Text.Length <= 0)
+            {
+                MessageBox.Show("入力値が不足しています。", "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return -4;
+            }
+
+            return 0;
         }
 
+        /// <summary>
+        /// 変換ボタンを押したときの処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HenkanButton_Click(object sender, EventArgs e)
+        {
+            //画面に正しい情報が入力されているかチェック
+            if (Form_InputCheck() != 0) return;
+
+            ImageFormat imageFormat;
+            switch (OutputTypeComboBox.SelectedIndex)
+            {
+                case 0:
+                    imageFormat = ImageFormat.Bmp;
+                    break;
+                case 1:
+                    imageFormat = ImageFormat.Jpeg;
+                    break;
+                case 2:
+                    imageFormat = ImageFormat.Png;
+                    break;
+                default:
+                    imageFormat = ImageFormat.Png;
+                    break;
+            }
+
+            var cvt = new component.Convert()
+            {
+                InputFolderListPath = inputFolder_list_path,                        //変換フォルダリスト
+
+                InputFileType = InputTypetextbox.Text,                              //入力ファイル拡張子
+                OutputFolderPath = output_path,                                     //出力フォルダパス
+                OutputFileType = imageFormat,                                       //出力ファイル拡張子
+
+                X = int.Parse(Xtextbox.Text),                                       //変換後のX解像度
+                Y = int.Parse(Ytextbox.Text),                                       //変換後のY解像度
+                Aspect_lock = aspect_ratioCheckBox.Checked,                         //アスペクト比ロック
+
+                ConvertMode = (ConvertMode)ConvertModeSelect_comboBox.SelectedIndex,//変換モード
+                Thread_Value = 10                                                   //並列同期数
+            };
+
+            //Tempフォルダの中身をきれいにしておく
+            Function.TempDelete();
+
+            //変換実行
+            AppSettingData.Converting = true;
+            cvt.Convert_Run(this);
+        }
+
+        /// <summary>
+        /// 変換リストから指定したパスを削除します。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void InputFileListRemoveButton_Click(object sender, EventArgs e)
         {
-            if (AppData.multiple_folder_entry | AppData.multiple_folder_synchronous_entry)
+            if (ConvertModeSelect_comboBox.SelectedIndex == 1 | ConvertModeSelect_comboBox.SelectedIndex == 2)
             {
                 if (InputFileListBox.SelectedIndex == -1) return;
 
                 Debug.WriteLine(InputFileListBox.Text);
 
                 //変換リスト、Formから削除
-                AppData.inputFolderListPath.Remove(InputFileListBox.Text);
+                inputFolder_list_path.Remove(InputFileListBox.Text);
                 InputFileListBox.Items.RemoveAt(InputFileListBox.SelectedIndex);
             }
-        }
-
-        private void kakucho_button_Click(object sender, EventArgs e)
-        {
-            using KakuchoSettingForm ksf = new()
-            {
-                StartPosition = FormStartPosition.Manual,
-                Location = this.Location
-            };
-
-            ksf.ShowDialog();
-        }
-
-        private void settingsave_button_Click(object sender, EventArgs e)
-        {
-            using SettingSaveForm sform = new(InputTypetextbox.Text, OutputTypeComboBox.SelectedItem.ToString())
-            {
-                StartPosition = FormStartPosition.Manual,
-                Location = this.Location
-            };
-
-            sform.ShowDialog();
         }
 
         /// <summary>
@@ -135,7 +179,7 @@ namespace PictureReSize
         private void Change_input_list_Add(string inputpath)
         {
             //変換リストに追加する
-            AppData.inputFolderListPath.Add(inputpath);
+            inputFolder_list_path.Add(inputpath);
 
             //表示用
             InputFileListBox.Items.Add(inputpath);
@@ -149,47 +193,131 @@ namespace PictureReSize
         private void ConvertModeSelect_comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             //初期化
-            AppData.inputFolderListPath.Clear();
+            inputFolder_list_path.Clear();
             InputFileListBox.Items.Clear();
-            AppData.OutputFolderPath = string.Empty;
 
-            if ((ConvertModeSelect_comboBox.SelectedIndex == 1) | (ConvertModeSelect_comboBox.SelectedIndex == 2))
+            //複数変換、複数同期変換のとき
+            if (ConvertModeSelect_comboBox.SelectedIndex == 1 | ConvertModeSelect_comboBox.SelectedIndex == 2)
             {
+                //複数変換のとき
                 if (ConvertModeSelect_comboBox.SelectedIndex == 1)
                 {
-                    AppData.multiple_folder_entry = true;
-                    AppData.multiple_folder_synchronous_entry = false;
                     OutputButton.Visible = true;
                     OutputtextBox.Visible = true;
                 }
 
+                //複数同期変換のとき
                 if (ConvertModeSelect_comboBox.SelectedIndex == 2)
                 {
-                    AppData.multiple_folder_synchronous_entry = true;
-                    AppData.multiple_folder_entry = false;
                     OutputButton.Visible = false;
                     OutputtextBox.Visible = false;
                 }
 
+                //複数変換、複数同期変換の共通して変更するところ
                 InputtextBox.Visible = false;
                 InputFileListBox.Visible = true;
                 InputFileListRemoveButton.Visible = true;
                 InputButton.Text = "追加";
             }
+
+            //通常変換のとき
             else
             {
                 OutputButton.Visible = true;
                 OutputtextBox.Visible = true;
                 InputtextBox.Visible = true;
 
-                OutputtextBox.Text = AppData.OutputFolderPath;
+                OutputtextBox.Text = output_path;
                 InputtextBox.Text = "";
                 InputFileListBox.Visible = false;
                 InputFileListRemoveButton.Visible = false;
-                AppData.multiple_folder_entry = false;
-                AppData.multiple_folder_synchronous_entry = false;
                 InputButton.Text = "入力";
             }
+        }
+
+        /// <summary>
+        /// 設定を保存します。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SettingSave_toolStripButton_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.IntputFileType = InputTypetextbox.Text;
+            Properties.Settings.Default.OutputFileType = OutputTypeComboBox.SelectedIndex;
+            Properties.Settings.Default.Save();
+
+            MessageBox.Show("設定を保存しました", "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        /// <summary>
+        /// InputButtonにドラッグされたときの処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void InputButton_DragDrop(object sender, DragEventArgs e)
+        {
+            //もしドラッグされたものがフォルダならドラッグされたアイテムのフォルダパスを取得する
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                //通常変換のときは複数ドラッグは受け付けないようにする
+                if (((string[])e.Data.GetData(DataFormats.FileDrop)).Length != 1 & ConvertModeSelect_comboBox.SelectedIndex == 0) return;
+
+                var selectpath = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                foreach (var path in selectpath)
+                {
+                    //フォルダなら
+                    if (System.IO.Directory.Exists(path))
+                    {
+                        //Formに表示
+                        InputtextBox.Text = path + @"\";
+
+                        //変換リストに追加する
+                        Change_input_list_Add(path);
+
+                        Debug.WriteLine("InputPath: " + path);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// OutputButtonにドラッグされたときの処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OutputButton_DragDrop(object sender, DragEventArgs e)
+        {
+            //もしドラッグされたものがフォルダならドラッグされたアイテムのフォルダパスを取得する
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                //複数ドラッグは受け付けないようにする
+                if (((string[])e.Data.GetData(DataFormats.FileDrop)).Length != 1) return;
+
+                var selectpath = ((string[])e.Data.GetData(DataFormats.FileDrop))[0];
+
+                //フォルダなら
+                if (System.IO.Directory.Exists(selectpath))
+                {
+                    //Formに表示
+                    OutputtextBox.Text = selectpath + @"\";
+
+                    //変換リストに追加する
+                    output_path = selectpath;
+
+                    Debug.WriteLine("OutputPath: " + selectpath);
+                }
+            }
+        }
+
+        private void InputButton_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.All;
+        }
+
+        private void OutputButton_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.All;
         }
     }
 }
