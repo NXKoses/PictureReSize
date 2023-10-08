@@ -29,12 +29,11 @@ namespace PictureReSize
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             groupBox1 = new System.Windows.Forms.GroupBox();
             label5 = new System.Windows.Forms.Label();
             ConvertModeSelect_comboBox = new System.Windows.Forms.ComboBox();
-            settingsave_button = new System.Windows.Forms.Button();
             OutputTypeComboBox = new System.Windows.Forms.ComboBox();
-            kakucho_button = new System.Windows.Forms.Button();
             aspect_ratioCheckBox = new System.Windows.Forms.CheckBox();
             label4 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -51,29 +50,30 @@ namespace PictureReSize
             InputFileListBox = new System.Windows.Forms.ListBox();
             InputFileListRemoveButton = new System.Windows.Forms.Button();
             sintyoku = new System.Windows.Forms.Label();
+            toolStrip1 = new System.Windows.Forms.ToolStrip();
+            SettingSave_toolStripButton = new System.Windows.Forms.ToolStripButton();
             groupBox1.SuspendLayout();
+            toolStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(Xtextbox);
             groupBox1.Controls.Add(label5);
+            groupBox1.Controls.Add(label1);
+            groupBox1.Controls.Add(Ytextbox);
             groupBox1.Controls.Add(ConvertModeSelect_comboBox);
-            groupBox1.Controls.Add(settingsave_button);
             groupBox1.Controls.Add(OutputTypeComboBox);
-            groupBox1.Controls.Add(kakucho_button);
             groupBox1.Controls.Add(aspect_ratioCheckBox);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(InputTypetextbox);
             groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(Ytextbox);
-            groupBox1.Controls.Add(label1);
-            groupBox1.Controls.Add(Xtextbox);
-            groupBox1.Location = new System.Drawing.Point(12, 13);
+            groupBox1.Location = new System.Drawing.Point(12, 34);
             groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            groupBox1.Size = new System.Drawing.Size(239, 242);
+            groupBox1.Size = new System.Drawing.Size(224, 226);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "基本設定";
@@ -81,7 +81,7 @@ namespace PictureReSize
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new System.Drawing.Point(6, 212);
+            label5.Location = new System.Drawing.Point(6, 186);
             label5.Name = "label5";
             label5.Size = new System.Drawing.Size(44, 18);
             label5.TabIndex = 14;
@@ -92,40 +92,20 @@ namespace PictureReSize
             ConvertModeSelect_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             ConvertModeSelect_comboBox.FormattingEnabled = true;
             ConvertModeSelect_comboBox.Items.AddRange(new object[] { "通常変換", "複数フォルダ入力", "複数フォルダ同期入出力" });
-            ConvertModeSelect_comboBox.Location = new System.Drawing.Point(56, 208);
+            ConvertModeSelect_comboBox.Location = new System.Drawing.Point(56, 183);
             ConvertModeSelect_comboBox.Name = "ConvertModeSelect_comboBox";
-            ConvertModeSelect_comboBox.Size = new System.Drawing.Size(177, 26);
+            ConvertModeSelect_comboBox.Size = new System.Drawing.Size(162, 26);
             ConvertModeSelect_comboBox.TabIndex = 13;
             ConvertModeSelect_comboBox.SelectedIndexChanged += ConvertModeSelect_comboBox_SelectedIndexChanged;
-            // 
-            // settingsave_button
-            // 
-            settingsave_button.Location = new System.Drawing.Point(189, 102);
-            settingsave_button.Name = "settingsave_button";
-            settingsave_button.Size = new System.Drawing.Size(44, 23);
-            settingsave_button.TabIndex = 12;
-            settingsave_button.Text = "保存";
-            settingsave_button.UseVisualStyleBackColor = true;
-            settingsave_button.Click += settingsave_button_Click;
             // 
             // OutputTypeComboBox
             // 
             OutputTypeComboBox.FormattingEnabled = true;
             OutputTypeComboBox.Items.AddRange(new object[] { "bmp", "jpeg", "png" });
-            OutputTypeComboBox.Location = new System.Drawing.Point(108, 101);
+            OutputTypeComboBox.Location = new System.Drawing.Point(143, 101);
             OutputTypeComboBox.Name = "OutputTypeComboBox";
             OutputTypeComboBox.Size = new System.Drawing.Size(75, 26);
             OutputTypeComboBox.TabIndex = 11;
-            // 
-            // kakucho_button
-            // 
-            kakucho_button.Location = new System.Drawing.Point(155, 172);
-            kakucho_button.Name = "kakucho_button";
-            kakucho_button.Size = new System.Drawing.Size(78, 30);
-            kakucho_button.TabIndex = 10;
-            kakucho_button.Text = "拡張設定";
-            kakucho_button.UseVisualStyleBackColor = true;
-            kakucho_button.Click += kakucho_button_Click;
             // 
             // aspect_ratioCheckBox
             // 
@@ -142,7 +122,7 @@ namespace PictureReSize
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new System.Drawing.Point(6, 134);
+            label4.Location = new System.Drawing.Point(18, 134);
             label4.Name = "label4";
             label4.Size = new System.Drawing.Size(184, 18);
             label4.TabIndex = 7;
@@ -151,7 +131,7 @@ namespace PictureReSize
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(6, 104);
+            label3.Location = new System.Drawing.Point(30, 109);
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(68, 18);
             label3.TabIndex = 5;
@@ -159,7 +139,7 @@ namespace PictureReSize
             // 
             // InputTypetextbox
             // 
-            InputTypetextbox.Location = new System.Drawing.Point(108, 66);
+            InputTypetextbox.Location = new System.Drawing.Point(143, 62);
             InputTypetextbox.Name = "InputTypetextbox";
             InputTypetextbox.Size = new System.Drawing.Size(75, 25);
             InputTypetextbox.TabIndex = 4;
@@ -175,7 +155,7 @@ namespace PictureReSize
             // 
             // Ytextbox
             // 
-            Ytextbox.Location = new System.Drawing.Point(108, 25);
+            Ytextbox.Location = new System.Drawing.Point(143, 25);
             Ytextbox.Name = "Ytextbox";
             Ytextbox.Size = new System.Drawing.Size(75, 25);
             Ytextbox.TabIndex = 2;
@@ -183,7 +163,7 @@ namespace PictureReSize
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(87, 33);
+            label1.Location = new System.Drawing.Point(122, 32);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(15, 18);
             label1.TabIndex = 1;
@@ -191,16 +171,16 @@ namespace PictureReSize
             // 
             // Xtextbox
             // 
-            Xtextbox.Location = new System.Drawing.Point(6, 25);
+            Xtextbox.Location = new System.Drawing.Point(54, 25);
             Xtextbox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             Xtextbox.Name = "Xtextbox";
-            Xtextbox.Size = new System.Drawing.Size(75, 25);
+            Xtextbox.Size = new System.Drawing.Size(62, 25);
             Xtextbox.TabIndex = 0;
             // 
             // HenkanButton
             // 
             HenkanButton.Font = new System.Drawing.Font("メイリオ", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            HenkanButton.Location = new System.Drawing.Point(12, 364);
+            HenkanButton.Location = new System.Drawing.Point(12, 369);
             HenkanButton.Name = "HenkanButton";
             HenkanButton.Size = new System.Drawing.Size(593, 65);
             HenkanButton.TabIndex = 1;
@@ -210,29 +190,35 @@ namespace PictureReSize
             // 
             // InputButton
             // 
+            InputButton.AllowDrop = true;
             InputButton.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            InputButton.Location = new System.Drawing.Point(12, 262);
+            InputButton.Location = new System.Drawing.Point(12, 267);
             InputButton.Name = "InputButton";
             InputButton.Size = new System.Drawing.Size(295, 65);
             InputButton.TabIndex = 2;
             InputButton.Text = "入力";
             InputButton.UseVisualStyleBackColor = true;
             InputButton.Click += InputButton_Click;
+            InputButton.DragDrop += InputButton_DragDrop;
+            InputButton.DragEnter += InputButton_DragEnter;
             // 
             // OutputButton
             // 
+            OutputButton.AllowDrop = true;
             OutputButton.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            OutputButton.Location = new System.Drawing.Point(313, 262);
+            OutputButton.Location = new System.Drawing.Point(313, 267);
             OutputButton.Name = "OutputButton";
             OutputButton.Size = new System.Drawing.Size(292, 65);
             OutputButton.TabIndex = 3;
             OutputButton.Text = "出力";
             OutputButton.UseVisualStyleBackColor = true;
             OutputButton.Click += OutputButton_Click;
+            OutputButton.DragDrop += OutputButton_DragDrop;
+            OutputButton.DragEnter += OutputButton_DragEnter;
             // 
             // InputtextBox
             // 
-            InputtextBox.Location = new System.Drawing.Point(12, 333);
+            InputtextBox.Location = new System.Drawing.Point(12, 338);
             InputtextBox.Name = "InputtextBox";
             InputtextBox.ReadOnly = true;
             InputtextBox.Size = new System.Drawing.Size(295, 25);
@@ -240,7 +226,7 @@ namespace PictureReSize
             // 
             // OutputtextBox
             // 
-            OutputtextBox.Location = new System.Drawing.Point(313, 333);
+            OutputtextBox.Location = new System.Drawing.Point(313, 338);
             OutputtextBox.Name = "OutputtextBox";
             OutputtextBox.ReadOnly = true;
             OutputtextBox.Size = new System.Drawing.Size(292, 25);
@@ -250,14 +236,14 @@ namespace PictureReSize
             // 
             InputFileListBox.FormattingEnabled = true;
             InputFileListBox.ItemHeight = 18;
-            InputFileListBox.Location = new System.Drawing.Point(257, 12);
+            InputFileListBox.Location = new System.Drawing.Point(242, 33);
             InputFileListBox.Name = "InputFileListBox";
-            InputFileListBox.Size = new System.Drawing.Size(348, 184);
+            InputFileListBox.Size = new System.Drawing.Size(363, 184);
             InputFileListBox.TabIndex = 6;
             // 
             // InputFileListRemoveButton
             // 
-            InputFileListRemoveButton.Location = new System.Drawing.Point(528, 204);
+            InputFileListRemoveButton.Location = new System.Drawing.Point(528, 225);
             InputFileListRemoveButton.Name = "InputFileListRemoveButton";
             InputFileListRemoveButton.Size = new System.Drawing.Size(77, 23);
             InputFileListRemoveButton.TabIndex = 7;
@@ -268,17 +254,36 @@ namespace PictureReSize
             // sintyoku
             // 
             sintyoku.AutoSize = true;
-            sintyoku.Location = new System.Drawing.Point(265, 221);
+            sintyoku.Location = new System.Drawing.Point(265, 242);
             sintyoku.Name = "sintyoku";
             sintyoku.Size = new System.Drawing.Size(0, 18);
             sintyoku.TabIndex = 8;
+            // 
+            // toolStrip1
+            // 
+            toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { SettingSave_toolStripButton });
+            toolStrip1.Location = new System.Drawing.Point(0, 0);
+            toolStrip1.Name = "toolStrip1";
+            toolStrip1.Size = new System.Drawing.Size(611, 25);
+            toolStrip1.TabIndex = 9;
+            toolStrip1.Text = "toolStrip1";
+            // 
+            // SettingSave_toolStripButton
+            // 
+            SettingSave_toolStripButton.Image = (System.Drawing.Image)resources.GetObject("SettingSave_toolStripButton.Image");
+            SettingSave_toolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            SettingSave_toolStripButton.Name = "SettingSave_toolStripButton";
+            SettingSave_toolStripButton.Size = new System.Drawing.Size(99, 22);
+            SettingSave_toolStripButton.Text = "設定の保存(&S)";
+            SettingSave_toolStripButton.Click += SettingSave_toolStripButton_Click;
             // 
             // Form1
             // 
             AllowDrop = true;
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(617, 441);
+            ClientSize = new System.Drawing.Size(611, 445);
+            Controls.Add(toolStrip1);
             Controls.Add(sintyoku);
             Controls.Add(InputFileListRemoveButton);
             Controls.Add(InputFileListBox);
@@ -296,6 +301,8 @@ namespace PictureReSize
             Text = "Picture Resize 2";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            toolStrip1.ResumeLayout(false);
+            toolStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -318,12 +325,12 @@ namespace PictureReSize
         private System.Windows.Forms.CheckBox aspect_ratioCheckBox;
         private System.Windows.Forms.ListBox InputFileListBox;
         private System.Windows.Forms.Button InputFileListRemoveButton;
-        private System.Windows.Forms.Button kakucho_button;
         private System.Windows.Forms.ComboBox OutputTypeComboBox;
-        private System.Windows.Forms.Button settingsave_button;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox ConvertModeSelect_comboBox;
         public System.Windows.Forms.Label sintyoku;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton SettingSave_toolStripButton;
     }
 }
 
