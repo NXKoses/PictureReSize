@@ -32,7 +32,7 @@ namespace PictureReSize
             ConvertModeSelect_comboBox.SelectedIndex = 0;
             InputButton.Select();
 
-            this.Text += " ver: 2.0.0.1";
+            this.Text += " ver: 2.0.1.0";
         }
 
         private void InputButton_Click(object sender, EventArgs e)
@@ -146,7 +146,6 @@ namespace PictureReSize
             };
 
             //変換実行
-            Program.Converting = true;
             cvt.Convert_Run(this);
         }
 

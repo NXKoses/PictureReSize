@@ -1,12 +1,18 @@
-﻿using System;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Bmp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Processing;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Image = SixLabors.ImageSharp.Image;
 
 #pragma warning disable CA1416 // プラットフォームの互換性を検証
 namespace PictureReSize.component
@@ -44,7 +50,7 @@ namespace PictureReSize.component
         public int Y { get; set; }
 
         /// <summary>
-        /// アスペクト比ロック
+        /// アスペクト比維持
         /// </summary>
         public bool Aspect_lock { get; set; } = false;
 
@@ -58,12 +64,12 @@ namespace PictureReSize.component
         /// </summary>
         public int Thread_Value { get; set; } = 10;
 
-        private static Object lockobject = new();
+        private static object lockobject = new();
         private ConcurrentQueue<string> moveErrorList = new();
         private int activeFilesLength;
         private Form1? form;
 
-        public async void Convert_Run(Form1 form)
+        public void Convert_Run(Form1 form)
         {
             this.form = form;
 
@@ -89,7 +95,8 @@ namespace PictureReSize.component
             }
 
             //変換処理
-            _ = Task.Run (() => Resizer());
+            Program.Converting = true;
+            _ = Task.Run(() => Resizer());
         }
 
         private void Resizer()
@@ -101,6 +108,9 @@ namespace PictureReSize.component
                 MaxDegreeOfParallelism = Thread_Value
             };
 
+            //エンコーダーを取得しておく
+            IImageEncoder encoder = GetImageEncoder(OutputFileType);
+
             foreach (var folderitem in InputFolderListPath)
             {
                 var itemlist = Directory.GetFiles(folderitem, "*." + InputFileType);
@@ -111,44 +121,37 @@ namespace PictureReSize.component
                     var filename = Path.GetFileNameWithoutExtension(item);
                     try
                     {
-                        //各タスクで独立したBitmapオブジェクトを作成
-                        using Bitmap bitmap = new(item);
+                        using var image = Image.Load(item);
+                        using var ms = new MemoryStream();
 
                         //アスペクト比計算
                         var resizeWidth = X;
-                        var resizeHeight = (int)((float)bitmap.Height / bitmap.Width * X);
+                        var resizeHeight = (int)((float)image.Height / image.Width * X);
 
-                        //アスペクト比解除時
+                        //アスペクト比維持 解除時
                         if (!Aspect_lock)
                         {
                             resizeWidth = X;
                             resizeHeight = Y;
                         }
 
-
                         //画像を縮小する
-                        using Bitmap resizeBmp = new(resizeWidth, resizeHeight);
-                        using Graphics g = Graphics.FromImage(resizeBmp);
-                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                        g.DrawImage(bitmap, 0, 0, resizeWidth, resizeHeight);
+                        image.Mutate(x => x.Resize(resizeWidth, resizeHeight));
 
                         //画像を保存（モードに合わせて）
                         switch (ConvertMode)
                         {
                             case Program.ConvertMode.Normal:
-                                resizeBmp.Save(Path.Combine(OutputFolderPath + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), OutputFileType);
+                                image.Save(Path.Combine(OutputFolderPath + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), encoder);
                                 break;
 
                             case Program.ConvertMode.Multiple:
-                                resizeBmp.Save(Path.Combine(OutputFolderPath + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), OutputFileType);
+                                image.Save(Path.Combine(OutputFolderPath + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), encoder);
                                 break;
 
                             case Program.ConvertMode.Multiple_Folder_Sync:
-                                resizeBmp.Save(Path.Combine(folderitem + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), OutputFileType);
+                                image.Save(Path.Combine(folderitem + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), encoder);
                                 break;
-
-                            default:
-                                throw new Exception("変換モードが設定されていません。");
                         }
 
                         //カウント
@@ -192,6 +195,33 @@ namespace PictureReSize.component
                 MessageBox.Show(erroritemlist + Environment.NewLine + "以下の画像の変換（保存）に失敗しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 moveErrorList.Clear();      //エラー履歴を削除
             }
+        }
+
+        /// <summary>
+        /// ImageFormat => IImageEncoderに変換
+        /// </summary>
+        /// <param name="outputFileType"></param>
+        /// <returns></returns>
+        private static IImageEncoder GetImageEncoder(ImageFormat? outputFileType)
+        {
+            //エンコーダーを取得しておく
+            if (outputFileType == ImageFormat.Png) return new PngEncoder()
+            {
+                CompressionLevel = PngCompressionLevel.BestSpeed,
+                SkipMetadata = false
+            };
+            if (outputFileType == ImageFormat.Jpeg) return new JpegEncoder()
+            {
+                Quality = 100,
+                SkipMetadata = false
+            };
+            if (outputFileType == ImageFormat.Bmp) return new BmpEncoder();
+
+            return new PngEncoder()
+            {
+                CompressionLevel = PngCompressionLevel.BestSpeed,
+                SkipMetadata = false
+            };
         }
     }
 }
