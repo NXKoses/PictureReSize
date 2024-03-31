@@ -32,7 +32,7 @@ namespace PictureReSize
             ConvertModeSelect_comboBox.SelectedIndex = 0;
             InputButton.Select();
 
-            this.Text += " ver: 2.0.1.0";
+            this.Text += " ver: 2.0.1.1";
         }
 
         private void InputButton_Click(object sender, EventArgs e)
