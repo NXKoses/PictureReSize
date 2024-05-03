@@ -7,12 +7,14 @@ using System.Windows.Forms;
 
 namespace PictureReSize
 {
-    public partial class Form1 : Form
+    public partial class MainWindow : Form
     {
-        private List<string> inputFolder_list_path = new();
+        private readonly List<string> inputFolder_list_path = new();
         private string output_path = "";
 
-        public Form1()
+        readonly string Version = "2.0.2.2";
+
+        public MainWindow()
         {
             InitializeComponent();
 
@@ -32,7 +34,10 @@ namespace PictureReSize
             ConvertModeSelect_comboBox.SelectedIndex = 0;
             InputButton.Select();
 
-            this.Text += " ver: 2.0.2.1";
+            this.Text += $" Ver: {Version}";
+
+            // 初回起動だったら更新履歴を表示
+            ShowUpdateInfo();
         }
 
         private void InputButton_Click(object sender, EventArgs e)
@@ -111,23 +116,13 @@ namespace PictureReSize
         {
             //画面に正しい情報が入力されているかチェック
             if (Form_InputCheck() != 0) return;
-
-            ImageFormat imageFormat;
-            switch (OutputTypeComboBox.SelectedIndex)
+            ImageFormat imageFormat = OutputTypeComboBox.SelectedIndex switch
             {
-                case 0:
-                    imageFormat = ImageFormat.Bmp;
-                    break;
-                case 1:
-                    imageFormat = ImageFormat.Jpeg;
-                    break;
-                case 2:
-                    imageFormat = ImageFormat.Png;
-                    break;
-                default:
-                    imageFormat = ImageFormat.Png;
-                    break;
-            }
+                0 => ImageFormat.Bmp,
+                1 => ImageFormat.Jpeg,
+                2 => ImageFormat.Png,
+                _ => ImageFormat.Png,
+            };
 
             var cvt = new component.Convert()
             {
@@ -306,6 +301,25 @@ namespace PictureReSize
             }
         }
 
+        /// <summary>
+        /// 更新履歴を表示します。初回起動時のみ表示されます。
+        /// </summary>
+        /// <param name="forceShow">trueで強制的に表示</param>
+        public void ShowUpdateInfo(bool forceShow = false)
+        {
+            bool isFirst = Properties.Settings.Default.IsFirst;
+
+            // 初回起動、または強制表示のとき
+            if (isFirst || forceShow)
+            {
+                var hw = new UpdateHistoryWindow(Version);
+                hw.ShowDialog();
+
+                Properties.Settings.Default.IsFirst = false;
+                Properties.Settings.Default.Save();
+            }
+        }
+
         private void InputButton_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.All;
@@ -314,6 +328,12 @@ namespace PictureReSize
         private void OutputButton_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.All;
+        }
+
+        private void ヘルプLToolStripButton_Click(object sender, EventArgs e)
+        {
+            // 強制的に表示
+            ShowUpdateInfo(true);
         }
     }
 }

@@ -8,5 +8,8 @@
     <Setting Name="IntputFileType" Type="System.String" Scope="User">
       <Value Profile="(Default)">jpg</Value>
     </Setting>
+    <Setting Name="IsFirst" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

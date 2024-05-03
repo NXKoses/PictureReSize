@@ -1,7 +1,7 @@
 ﻿
 namespace PictureReSize
 {
-    partial class Form1
+    partial class MainWindow
     {
         /// <summary>
         /// 必要なデザイナー変数です。
@@ -29,9 +29,12 @@ namespace PictureReSize
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             groupBox1 = new System.Windows.Forms.GroupBox();
+            Xtextbox = new System.Windows.Forms.TextBox();
             label5 = new System.Windows.Forms.Label();
+            label1 = new System.Windows.Forms.Label();
+            Ytextbox = new System.Windows.Forms.TextBox();
             ConvertModeSelect_comboBox = new System.Windows.Forms.ComboBox();
             OutputTypeComboBox = new System.Windows.Forms.ComboBox();
             aspect_ratioCheckBox = new System.Windows.Forms.CheckBox();
@@ -39,9 +42,6 @@ namespace PictureReSize
             label3 = new System.Windows.Forms.Label();
             InputTypetextbox = new System.Windows.Forms.TextBox();
             label2 = new System.Windows.Forms.Label();
-            Ytextbox = new System.Windows.Forms.TextBox();
-            label1 = new System.Windows.Forms.Label();
-            Xtextbox = new System.Windows.Forms.TextBox();
             HenkanButton = new System.Windows.Forms.Button();
             InputButton = new System.Windows.Forms.Button();
             OutputButton = new System.Windows.Forms.Button();
@@ -52,6 +52,8 @@ namespace PictureReSize
             sintyoku = new System.Windows.Forms.Label();
             toolStrip1 = new System.Windows.Forms.ToolStrip();
             SettingSave_toolStripButton = new System.Windows.Forms.ToolStripButton();
+            toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            ヘルプLToolStripButton = new System.Windows.Forms.ToolStripButton();
             groupBox1.SuspendLayout();
             toolStrip1.SuspendLayout();
             SuspendLayout();
@@ -78,6 +80,14 @@ namespace PictureReSize
             groupBox1.TabStop = false;
             groupBox1.Text = "基本設定";
             // 
+            // Xtextbox
+            // 
+            Xtextbox.Location = new System.Drawing.Point(54, 25);
+            Xtextbox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            Xtextbox.Name = "Xtextbox";
+            Xtextbox.Size = new System.Drawing.Size(62, 25);
+            Xtextbox.TabIndex = 0;
+            // 
             // label5
             // 
             label5.AutoSize = true;
@@ -86,6 +96,22 @@ namespace PictureReSize
             label5.Size = new System.Drawing.Size(44, 18);
             label5.TabIndex = 14;
             label5.Text = "モード";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(122, 32);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(15, 18);
+            label1.TabIndex = 1;
+            label1.Text = "x";
+            // 
+            // Ytextbox
+            // 
+            Ytextbox.Location = new System.Drawing.Point(143, 25);
+            Ytextbox.Name = "Ytextbox";
+            Ytextbox.Size = new System.Drawing.Size(75, 25);
+            Ytextbox.TabIndex = 2;
             // 
             // ConvertModeSelect_comboBox
             // 
@@ -153,33 +179,9 @@ namespace PictureReSize
             label2.TabIndex = 3;
             label2.Text = "読み取る拡張子";
             // 
-            // Ytextbox
-            // 
-            Ytextbox.Location = new System.Drawing.Point(143, 25);
-            Ytextbox.Name = "Ytextbox";
-            Ytextbox.Size = new System.Drawing.Size(75, 25);
-            Ytextbox.TabIndex = 2;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(122, 32);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(15, 18);
-            label1.TabIndex = 1;
-            label1.Text = "x";
-            // 
-            // Xtextbox
-            // 
-            Xtextbox.Location = new System.Drawing.Point(54, 25);
-            Xtextbox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            Xtextbox.Name = "Xtextbox";
-            Xtextbox.Size = new System.Drawing.Size(62, 25);
-            Xtextbox.TabIndex = 0;
-            // 
             // HenkanButton
             // 
-            HenkanButton.Font = new System.Drawing.Font("メイリオ", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            HenkanButton.Font = new System.Drawing.Font("メイリオ", 15.75F);
             HenkanButton.Location = new System.Drawing.Point(12, 369);
             HenkanButton.Name = "HenkanButton";
             HenkanButton.Size = new System.Drawing.Size(593, 65);
@@ -191,7 +193,7 @@ namespace PictureReSize
             // InputButton
             // 
             InputButton.AllowDrop = true;
-            InputButton.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            InputButton.Font = new System.Drawing.Font("メイリオ", 14.25F);
             InputButton.Location = new System.Drawing.Point(12, 267);
             InputButton.Name = "InputButton";
             InputButton.Size = new System.Drawing.Size(295, 65);
@@ -205,7 +207,7 @@ namespace PictureReSize
             // OutputButton
             // 
             OutputButton.AllowDrop = true;
-            OutputButton.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            OutputButton.Font = new System.Drawing.Font("メイリオ", 14.25F);
             OutputButton.Location = new System.Drawing.Point(313, 267);
             OutputButton.Name = "OutputButton";
             OutputButton.Size = new System.Drawing.Size(292, 65);
@@ -261,7 +263,7 @@ namespace PictureReSize
             // 
             // toolStrip1
             // 
-            toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { SettingSave_toolStripButton });
+            toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { SettingSave_toolStripButton, toolStripSeparator2, ヘルプLToolStripButton });
             toolStrip1.Location = new System.Drawing.Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new System.Drawing.Size(611, 25);
@@ -273,9 +275,23 @@ namespace PictureReSize
             SettingSave_toolStripButton.Image = (System.Drawing.Image)resources.GetObject("SettingSave_toolStripButton.Image");
             SettingSave_toolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             SettingSave_toolStripButton.Name = "SettingSave_toolStripButton";
-            SettingSave_toolStripButton.Size = new System.Drawing.Size(99, 22);
-            SettingSave_toolStripButton.Text = "設定の保存(&S)";
+            SettingSave_toolStripButton.Size = new System.Drawing.Size(85, 22);
+            SettingSave_toolStripButton.Text = "設定の保存";
             SettingSave_toolStripButton.Click += SettingSave_toolStripButton_Click;
+            // 
+            // toolStripSeparator2
+            // 
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // ヘルプLToolStripButton
+            // 
+            ヘルプLToolStripButton.Image = (System.Drawing.Image)resources.GetObject("ヘルプLToolStripButton.Image");
+            ヘルプLToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            ヘルプLToolStripButton.Name = "ヘルプLToolStripButton";
+            ヘルプLToolStripButton.Size = new System.Drawing.Size(75, 22);
+            ヘルプLToolStripButton.Text = "更新履歴";
+            ヘルプLToolStripButton.Click += ヘルプLToolStripButton_Click;
             // 
             // Form1
             // 
@@ -293,7 +309,7 @@ namespace PictureReSize
             Controls.Add(InputButton);
             Controls.Add(HenkanButton);
             Controls.Add(groupBox1);
-            Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            Font = new System.Drawing.Font("メイリオ", 9F);
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             MaximizeBox = false;
@@ -331,6 +347,8 @@ namespace PictureReSize
         public System.Windows.Forms.Label sintyoku;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton SettingSave_toolStripButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton ヘルプLToolStripButton;
     }
 }
 
