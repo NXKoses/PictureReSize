@@ -67,9 +67,9 @@ namespace PictureReSize.component
         private static object lockobject = new();
         private ConcurrentQueue<string> moveErrorList = new();
         private int activeFilesLength;
-        private Form1? form;
+        private MainWindow? form;
 
-        public void Convert_Run(Form1 form)
+        public void Convert_Run(MainWindow form)
         {
             this.form = form;
 
