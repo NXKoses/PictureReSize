@@ -25,7 +25,7 @@ namespace PictureReSize
             // 現在のバージョンの表示
             this.nowversion_label.Text = $"現在のバージョン： {nowVersion}";
 
-            // 更新履歴の取得
+            // 更新履歴の取得と表示
             string updateHistory = await GetUpdateHistoryAsync();
             this.info_richTextBox.Text = updateHistory;
         }
