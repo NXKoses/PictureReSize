@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using Convert = PictureReSize.component.Convert;
 
 namespace PictureReSize
 {
@@ -12,17 +13,17 @@ namespace PictureReSize
         private readonly List<string> inputFolder_list_path = new();
         private string output_path = "";
 
-        readonly string Version = "2.0.2.2";
+        readonly string Version = "2.0.2.3";
 
         public MainWindow()
         {
             InitializeComponent();
 
-            //コントロールの初期化
+            // コントロールの初期化
             Xtextbox.Text = "1920";
             Ytextbox.Text = "1080";
 
-            //設定から呼び出す
+            // 設定から呼び出す
             InputTypetextbox.Text = Properties.Settings.Default.IntputFileType;
             OutputTypeComboBox.SelectedIndex = Properties.Settings.Default.OutputFileType;
 
@@ -42,16 +43,16 @@ namespace PictureReSize
 
         private void InputButton_Click(object sender, EventArgs e)
         {
-            //画面表示
+            // 画面表示
             var selectpath = FolderSelecter.FolderSelect();
 
-            //何もしなかったら戻る
+            // 何もしなかったら戻る
             if (selectpath == string.Empty) return;
 
-            //Formに表示
+            // Formに表示
             InputtextBox.Text = selectpath + @"\";
 
-            //変換リストに追加する
+            // 変換リストに追加する
             Change_input_list_Add(selectpath);
 
             Debug.WriteLine("InputPath: " + selectpath);
@@ -59,16 +60,16 @@ namespace PictureReSize
 
         private void OutputButton_Click(object sender, EventArgs e)
         {
-            //画面表示
+            // 画面表示
             var selectpath = FolderSelecter.FolderSelect();
 
-            //何もしなかったら戻る
+            // 何もしなかったら戻る
             if (selectpath == string.Empty) return;
 
-            //出力先フォルダを入れておく
+            // 出力先フォルダを入れておく
             output_path = selectpath + @"\";
 
-            //Formに表示
+            // Formに表示
             OutputtextBox.Text = selectpath + @"\";
 
             Debug.WriteLine("OutputPath: " + selectpath);
@@ -80,7 +81,7 @@ namespace PictureReSize
         /// <returns>0 正常</returns>
         private int Form_InputCheck()
         {
-            if (Program.Converting)
+            if (Convert.Converting)
             {
                 MessageBox.Show("変換中です。　そんなに急がないで(´；ω；｀)", "（＜・＞ω＜・＞）", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return -1;
@@ -92,13 +93,13 @@ namespace PictureReSize
                 return -2;
             }
 
-            if (output_path.Length <= 0 & ConvertModeSelect_comboBox.SelectedIndex != 2)
+            if (output_path.Length <= 0 && ConvertModeSelect_comboBox.SelectedIndex != 2)
             {
                 MessageBox.Show("出力先フォルダを選択してください", "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return -3;
             }
 
-            if (Xtextbox.Text.Length <= 0 | Ytextbox.Text.Length <= 0 | InputTypetextbox.Text.Length <= 0)
+            if (Xtextbox.Text.Length <= 0 || Ytextbox.Text.Length <= 0 || InputTypetextbox.Text.Length <= 0)
             {
                 MessageBox.Show("入力値が不足しています。", "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return -4;
@@ -114,8 +115,10 @@ namespace PictureReSize
         /// <param name="e"></param>
         private void HenkanButton_Click(object sender, EventArgs e)
         {
-            //画面に正しい情報が入力されているかチェック
+            // 画面に正しい情報が入力されているかチェック
             if (Form_InputCheck() != 0) return;
+
+            // 出力ファイル形式を設定
             ImageFormat imageFormat = OutputTypeComboBox.SelectedIndex switch
             {
                 0 => ImageFormat.Bmp,
@@ -124,23 +127,23 @@ namespace PictureReSize
                 _ => ImageFormat.Png,
             };
 
-            var cvt = new component.Convert()
+            var cvt = new Convert()
             {
-                InputFolderListPath = inputFolder_list_path,                        //変換フォルダリスト
+                InputFolderListPath = inputFolder_list_path,                        // 変換フォルダリスト
 
-                InputFileType = InputTypetextbox.Text,                              //入力ファイル拡張子
-                OutputFolderPath = output_path,                                     //出力フォルダパス
-                OutputFileType = imageFormat,                                       //出力ファイル拡張子
+                InputFileType = InputTypetextbox.Text,                              // 入力ファイル拡張子
+                OutputFolderPath = output_path,                                     // 出力フォルダパス
+                OutputFileType = imageFormat,                                       // 出力ファイル拡張子
 
-                X = int.Parse(Xtextbox.Text),                                       //変換後のX解像度
-                Y = int.Parse(Ytextbox.Text),                                       //変換後のY解像度
-                Aspect_lock = aspect_ratioCheckBox.Checked,                         //アスペクト比ロック
+                X = int.Parse(Xtextbox.Text),                                       // 変換後のX解像度
+                Y = int.Parse(Ytextbox.Text),                                       // 変換後のY解像度
+                Aspect_lock = aspect_ratioCheckBox.Checked,                         // アスペクト比ロック
 
-                ConvertMode = (Program.ConvertMode)ConvertModeSelect_comboBox.SelectedIndex,//変換モード
-                Thread_Value = 10                                                   //並列同期数
+                ConvertMode = (ConvertMode)ConvertModeSelect_comboBox.SelectedIndex,// 変換モード
+                Thread_Value = 10                                                   // 並列同期数
             };
 
-            //変換実行
+            // 変換実行
             cvt.Convert_Run(this);
         }
 
@@ -151,13 +154,13 @@ namespace PictureReSize
         /// <param name="e"></param>
         private void InputFileListRemoveButton_Click(object sender, EventArgs e)
         {
-            if (ConvertModeSelect_comboBox.SelectedIndex == 1 | ConvertModeSelect_comboBox.SelectedIndex == 2)
+            if (ConvertModeSelect_comboBox.SelectedIndex == 1 || ConvertModeSelect_comboBox.SelectedIndex == 2)
             {
                 if (InputFileListBox.SelectedIndex == -1) return;
 
                 Debug.WriteLine(InputFileListBox.Text);
 
-                //変換リスト、Formから削除
+                // 変換リスト、Formから削除
                 inputFolder_list_path.Remove(InputFileListBox.Text);
                 InputFileListBox.Items.RemoveAt(InputFileListBox.SelectedIndex);
             }
@@ -169,10 +172,10 @@ namespace PictureReSize
         /// <param name="inputpath"></param>
         private void Change_input_list_Add(string inputpath)
         {
-            //変換リストに追加する
+            // 変換リストに追加する
             inputFolder_list_path.Add(inputpath);
 
-            //表示用
+            // 表示用
             InputFileListBox.Items.Add(inputpath);
         }
 
@@ -183,35 +186,35 @@ namespace PictureReSize
         /// <param name="e"></param>
         private void ConvertModeSelect_comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //初期化
+            // 初期化
             inputFolder_list_path.Clear();
             InputFileListBox.Items.Clear();
 
-            //複数変換、複数同期変換のとき
+            // 複数変換、複数同期変換のとき
             if (ConvertModeSelect_comboBox.SelectedIndex == 1 | ConvertModeSelect_comboBox.SelectedIndex == 2)
             {
-                //複数変換のとき
+                // 複数変換のとき
                 if (ConvertModeSelect_comboBox.SelectedIndex == 1)
                 {
                     OutputButton.Visible = true;
                     OutputtextBox.Visible = true;
                 }
 
-                //複数同期変換のとき
+                // 複数同期変換のとき
                 if (ConvertModeSelect_comboBox.SelectedIndex == 2)
                 {
                     OutputButton.Visible = false;
                     OutputtextBox.Visible = false;
                 }
 
-                //複数変換、複数同期変換の共通して変更するところ
+                // 複数変換、複数同期変換の共通して変更するところ
                 InputtextBox.Visible = false;
                 InputFileListBox.Visible = true;
                 InputFileListRemoveButton.Visible = true;
                 InputButton.Text = "追加";
             }
 
-            //通常変換のとき
+            // 通常変換のとき
             else
             {
                 OutputButton.Visible = true;
@@ -247,26 +250,35 @@ namespace PictureReSize
         /// <param name="e"></param>
         private void InputButton_DragDrop(object sender, DragEventArgs e)
         {
-            //もしドラッグされたものがフォルダならドラッグされたアイテムのフォルダパスを取得する
+            // もしドラッグされたものがフォルダならドラッグされたアイテムのフォルダパスを取得する
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                //通常変換のときは複数ドラッグは受け付けないようにする
-                if (((string[])e.Data.GetData(DataFormats.FileDrop)).Length != 1 & ConvertModeSelect_comboBox.SelectedIndex == 0) return;
+                // 通常変換のときは複数ドラッグは受け付けないようにする
+                if (((string[])e.Data.GetData(DataFormats.FileDrop)).Length != 1 & ConvertModeSelect_comboBox.SelectedIndex == 0)
+                {
+                    MessageBox.Show("複数選択できません。", "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
                 var selectpath = (string[])e.Data.GetData(DataFormats.FileDrop);
 
                 foreach (var path in selectpath)
                 {
-                    //フォルダなら
+                    // フォルダなら
                     if (System.IO.Directory.Exists(path))
                     {
-                        //Formに表示
+                        // Formに表示
                         InputtextBox.Text = path + @"\";
 
-                        //変換リストに追加する
+                        // 変換リストに追加する
                         Change_input_list_Add(path);
 
                         Debug.WriteLine("InputPath: " + path);
+                    }
+                    else
+                    {
+                        MessageBox.Show("フォルダをドラッグしてください。", "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
                     }
                 }
             }
@@ -279,24 +291,32 @@ namespace PictureReSize
         /// <param name="e"></param>
         private void OutputButton_DragDrop(object sender, DragEventArgs e)
         {
-            //もしドラッグされたものがフォルダならドラッグされたアイテムのフォルダパスを取得する
+            // もしドラッグされたものがフォルダならドラッグされたアイテムのフォルダパスを取得する
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                //複数ドラッグは受け付けないようにする
-                if (((string[])e.Data.GetData(DataFormats.FileDrop)).Length != 1) return;
+                // 複数ドラッグは受け付けないようにする
+                if (((string[])e.Data.GetData(DataFormats.FileDrop)).Length != 1)
+                {
+                    MessageBox.Show("複数選択できません。", "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
                 var selectpath = ((string[])e.Data.GetData(DataFormats.FileDrop))[0];
 
-                //フォルダなら
+                // フォルダなら
                 if (System.IO.Directory.Exists(selectpath))
                 {
-                    //Formに表示
+                    // Formに表示
                     OutputtextBox.Text = selectpath + @"\";
 
-                    //変換リストに追加する
+                    // 変換リストに追加する
                     output_path = selectpath;
 
                     Debug.WriteLine("OutputPath: " + selectpath);
+                }
+                else
+                {
+                    MessageBox.Show("フォルダをドラッグしてください。", "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
@@ -332,7 +352,7 @@ namespace PictureReSize
 
         private void ヘルプLToolStripButton_Click(object sender, EventArgs e)
         {
-            // 強制的に表示
+            // 表示
             ShowUpdateInfo(true);
         }
     }

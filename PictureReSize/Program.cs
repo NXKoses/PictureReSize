@@ -7,17 +7,6 @@ namespace PictureReSize
     {
         public static string GetAppPath() => Application.StartupPath;
 
-        public static bool Converting = false;
-
-        /// <summary>
-        /// 変換モード
-        /// </summary>
-        public enum ConvertMode
-        {
-            Normal,
-            Multiple,
-            Multiple_Folder_Sync
-        }
         /// <summary>
         /// アプリケーションのメイン エントリ ポイントです。
         /// </summary>

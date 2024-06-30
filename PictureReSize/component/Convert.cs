@@ -14,11 +14,20 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Image = SixLabors.ImageSharp.Image;
 
-#pragma warning disable CA1416 // プラットフォームの互換性を検証
 namespace PictureReSize.component
 {
     class Convert
     {
+        /// <summary>
+        /// 変換フラグ
+        /// </summary>
+        public static bool Converting { get; set; } = false;
+
+        /// <summary>
+        /// ロックオブジェクト
+        /// </summary>
+        private static object lockobject { get; set; } = new();
+
         /// <summary>
         /// 出力フォルダ
         /// </summary>
@@ -57,14 +66,13 @@ namespace PictureReSize.component
         /// <summary>
         /// 変換モード
         /// </summary>
-        public Program.ConvertMode ConvertMode { get; set; }
+        public ConvertMode ConvertMode { get; set; }
 
         /// <summary>
         /// スレッド数
         /// </summary>
         public int Thread_Value { get; set; } = 10;
 
-        private static object lockobject = new();
         private ConcurrentQueue<string> moveErrorList = new();
         private int activeFilesLength;
         private MainWindow? form;
@@ -73,29 +81,29 @@ namespace PictureReSize.component
         {
             this.form = form;
 
-            //出力フォルダの存在確認
-            //ConvertMode.Multiple_Folder_Syncの場合は入力フォルダと出力フォルダが同じになるので確認しない
-            if (!Directory.Exists(OutputFolderPath) & ConvertMode != Program.ConvertMode.Multiple_Folder_Sync)
+            // 出力フォルダの存在確認
+            // ConvertMode.Multiple_Folder_Syncの場合は入力フォルダと出力フォルダが同じになるので確認しない
+            if (!Directory.Exists(OutputFolderPath) && ConvertMode != ConvertMode.Multiple_Folder_Sync)
             {
                 MessageBox.Show("出力フォルダが存在しません", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            //入力フォルダの変換できるファイル数をカウント
+            // 入力フォルダの変換できるファイル数をカウント
             foreach (var item in InputFolderListPath)
             {
                 activeFilesLength += Directory.GetFiles(item, "*." + InputFileType).Length;
             }
 
-            //変換できるファイルが無い場合
+            // 変換できるファイルが無い場合
             if (activeFilesLength == 0)
             {
                 MessageBox.Show("フォルダの中に変換できるものがありませんでした", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            //変換処理
-            Program.Converting = true;
+            // 変換処理
+            Converting = true;
             _ = Task.Run(() => Resizer());
         }
 
@@ -108,14 +116,14 @@ namespace PictureReSize.component
                 MaxDegreeOfParallelism = Thread_Value
             };
 
-            //エンコーダーを取得しておく
+            // エンコーダーを取得しておく
             IImageEncoder encoder = GetImageEncoder(OutputFileType);
 
             foreach (var folderitem in InputFolderListPath)
             {
                 var itemlist = Directory.GetFiles(folderitem, "*." + InputFileType);
 
-                //並列処理
+                // 並列処理
                 Parallel.ForEach(itemlist, option, item =>
                 {
                     var filename = Path.GetFileNameWithoutExtension(item);
@@ -124,37 +132,37 @@ namespace PictureReSize.component
                         using var image = Image.Load(item);
                         using var ms = new MemoryStream();
 
-                        //アスペクト比計算
+                        // アスペクト比計算
                         var resizeWidth = X;
                         var resizeHeight = (int)((float)image.Height / image.Width * X);
 
-                        //アスペクト比維持 解除時
+                        // アスペクト比維持 解除時
                         if (!Aspect_lock)
                         {
                             resizeWidth = X;
                             resizeHeight = Y;
                         }
 
-                        //画像を縮小する
+                        // 画像を縮小する
                         image.Mutate(x => x.Resize(resizeWidth, resizeHeight));
 
-                        //画像を保存（モードに合わせて）
+                        // 画像を保存（モードに合わせて）
                         switch (ConvertMode)
                         {
-                            case Program.ConvertMode.Normal:
+                            case ConvertMode.Normal:
                                 image.Save(Path.Combine(OutputFolderPath + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), encoder);
                                 break;
 
-                            case Program.ConvertMode.Multiple:
+                            case ConvertMode.Multiple:
                                 image.Save(Path.Combine(OutputFolderPath + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), encoder);
                                 break;
 
-                            case Program.ConvertMode.Multiple_Folder_Sync:
+                            case ConvertMode.Multiple_Folder_Sync:
                                 image.Save(Path.Combine(folderitem + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), encoder);
                                 break;
                         }
 
-                        //カウント
+                        // カウント
                         lock (lockobject)
                         {
                             cnt++;
@@ -169,7 +177,7 @@ namespace PictureReSize.component
                         }
                     }
 
-                    //formに進捗表示
+                    // formに進捗表示
                     form?.Invoke(() =>
                     {
                         form.sintyoku.Text = cnt + " / " + activeFilesLength;
@@ -181,9 +189,10 @@ namespace PictureReSize.component
             }
 
             MessageBox.Show(cnt + "/" + activeFilesLength + "個変換しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            Program.Converting = false;
+            Converting = false;
 
-            if (!moveErrorList.IsEmpty)     //エラーが有る場合
+            // エラーが有る場合
+            if (!moveErrorList.IsEmpty)
             {
                 string erroritemlist = "";
 
@@ -193,7 +202,9 @@ namespace PictureReSize.component
                 }
 
                 MessageBox.Show(erroritemlist + Environment.NewLine + "以下の画像の変換（保存）に失敗しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                moveErrorList.Clear();      //エラー履歴を削除
+
+                // エラー履歴を削除
+                moveErrorList.Clear();
             }
         }
 
@@ -204,7 +215,7 @@ namespace PictureReSize.component
         /// <returns></returns>
         private static IImageEncoder GetImageEncoder(ImageFormat? outputFileType)
         {
-            //エンコーダーを取得しておく
+            // エンコーダーを取得しておく
             if (outputFileType == ImageFormat.Png) return new PngEncoder()
             {
                 CompressionLevel = PngCompressionLevel.BestSpeed,
@@ -224,5 +235,14 @@ namespace PictureReSize.component
             };
         }
     }
+
+    /// <summary>
+    /// 変換モード
+    /// </summary>
+    public enum ConvertMode
+    {
+        Normal,
+        Multiple,
+        Multiple_Folder_Sync
+    }
 }
-#pragma warning restore CA1416 // プラットフォームの互換性を検証
