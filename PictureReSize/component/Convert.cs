@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Image = SixLabors.ImageSharp.Image;
@@ -19,12 +20,12 @@ namespace PictureReSize.component
     class Convert
     {
         /// <summary>
-        /// 変換フラグ
+        /// 変換中フラグ
         /// </summary>
         public static bool Converting { get; set; } = false;
 
         /// <summary>
-        /// ロックオブジェクト
+        /// 並列処理のロックオブジェクト
         /// </summary>
         private static object lockobject { get; set; } = new();
 
@@ -76,8 +77,13 @@ namespace PictureReSize.component
         private ConcurrentQueue<string> moveErrorList = new();
         private int activeFilesLength;
         private MainWindow? form;
+        private int cnt;
 
-        public void Convert_Run(MainWindow form)
+        /// <summary>
+        /// 画像変換処理を開始します。
+        /// </summary>
+        /// <param name="form">進捗を表示するためのインスタンス</param>
+        public async void Convert_Run(MainWindow form)
         {
             this.form = form;
 
@@ -89,7 +95,7 @@ namespace PictureReSize.component
                 return;
             }
 
-            // 入力フォルダの変換できるファイル数をカウント
+            // 入力フォルダの中の変換できるファイル数をカウント
             foreach (var item in InputFolderListPath)
             {
                 activeFilesLength += Directory.GetFiles(item, "*." + InputFileType).Length;
@@ -104,106 +110,107 @@ namespace PictureReSize.component
 
             // 変換処理
             Converting = true;
-            _ = Task.Run(() => Resizer());
+            await ProcessImagesAsync();
         }
 
-        private void Resizer()
+        /// <summary>
+        /// フォルダごとに並列処理で画像を変換します。
+        /// </summary>
+        /// <returns></returns>
+        private async Task ProcessImagesAsync()
         {
-            int cnt = 0;
-
-            ParallelOptions option = new()
-            {
-                MaxDegreeOfParallelism = Thread_Value
-            };
+            // 並列処理の設定
+            var options = new ParallelOptions { MaxDegreeOfParallelism = Thread_Value };
 
             // エンコーダーを取得しておく
             IImageEncoder encoder = GetImageEncoder(OutputFileType);
 
-            foreach (var folderitem in InputFolderListPath)
+            // フォルダごとに別スレッドで処理させる
+            var tasks = InputFolderListPath.Select(folder => Task.Run(() =>
             {
-                var itemlist = Directory.GetFiles(folderitem, "*." + InputFileType);
-
-                // 並列処理
-                Parallel.ForEach(itemlist, option, item =>
+                // フォルダ内の画像ファイルを取得
+                var files = Directory.GetFiles(folder, "*." + InputFileType);
+                // フォルダ内の画像ファイルを並列処理で変換する
+                Parallel.ForEach(files, options, file =>
                 {
-                    var filename = Path.GetFileNameWithoutExtension(item);
-                    try
-                    {
-                        using var image = Image.Load(item);
-                        using var ms = new MemoryStream();
-
-                        // アスペクト比計算
-                        var resizeWidth = X;
-                        var resizeHeight = (int)((float)image.Height / image.Width * X);
-
-                        // アスペクト比維持 解除時
-                        if (!Aspect_lock)
-                        {
-                            resizeWidth = X;
-                            resizeHeight = Y;
-                        }
-
-                        // 画像を縮小する
-                        image.Mutate(x => x.Resize(resizeWidth, resizeHeight));
-
-                        // 画像を保存（モードに合わせて）
-                        switch (ConvertMode)
-                        {
-                            case ConvertMode.Normal:
-                                image.Save(Path.Combine(OutputFolderPath + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), encoder);
-                                break;
-
-                            case ConvertMode.Multiple:
-                                image.Save(Path.Combine(OutputFolderPath + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), encoder);
-                                break;
-
-                            case ConvertMode.Multiple_Folder_Sync:
-                                image.Save(Path.Combine(folderitem + @"\", $"{filename}.{OutputFileType.ToString().ToLower()}"), encoder);
-                                break;
-                        }
-
-                        // カウント
-                        lock (lockobject)
-                        {
-                            cnt++;
-                        }
-                    }
-                    catch
-                    {
-                        lock (lockobject)
-                        {
-                            moveErrorList.Enqueue(item);
-                            Debug.WriteLine("MoveErrorCnt Add :" + filename);
-                        }
-                    }
-
-                    // formに進捗表示
-                    form?.Invoke(() =>
-                    {
-                        form.sintyoku.Text = cnt + " / " + activeFilesLength;
-                        Debug.WriteLine("Converted :" + filename);
-                    });
-
-                    Function.Taskbar(cnt, activeFilesLength - 1);
+                    ProcessImage(file, folder, encoder);
                 });
-            }
+            }));
 
-            MessageBox.Show(cnt + "/" + activeFilesLength + "個変換しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // すべての処理が終わるまで待機
+            await Task.WhenAll(tasks);
+
+            MessageBox.Show($"{cnt}個変換しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Converting = false;
 
-            // エラーが有る場合
-            if (!moveErrorList.IsEmpty)
-            {
-                string erroritemlist = "";
+            // もし変換に失敗したファイルがあれば表示
+            ShowErrorMessages();
+        }
 
-                foreach (var item in moveErrorList)
+        /// <summary>
+        /// 画像一枚の変換処理を行い、formに進捗を表示します。
+        /// また、変換に失敗した場合はmoveErrorListに追加します。
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="folder"></param>
+        /// <param name="encoder"></param>
+        private void ProcessImage(string file, string folder, IImageEncoder encoder)
+        {
+            try
+            {
+                using var image = Image.Load(file);
+
+                int resizeWidth, resizeHeight;
+                if (Aspect_lock)
                 {
-                    erroritemlist += item + Environment.NewLine;
+                    resizeWidth = X;
+                    resizeHeight = (int)((float)image.Height / image.Width * X);
+                }
+                else
+                {
+                    resizeWidth = X;
+                    resizeHeight = Y;
                 }
 
-                MessageBox.Show(erroritemlist + Environment.NewLine + "以下の画像の変換（保存）に失敗しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                image.Mutate(x => x.Resize(resizeWidth, resizeHeight));
 
-                // エラー履歴を削除
+                string outputPath = ConvertMode switch
+                {
+                    ConvertMode.Normal => Path.Combine(OutputFolderPath, $"{Path.GetFileNameWithoutExtension(file)}.{OutputFileType.ToString().ToLower()}"),
+                    ConvertMode.Multiple => Path.Combine(OutputFolderPath, $"{Path.GetFileNameWithoutExtension(file)}.{OutputFileType.ToString().ToLower()}"),
+                    ConvertMode.Multiple_Folder_Sync => Path.Combine(folder, $"{Path.GetFileNameWithoutExtension(file)}.{OutputFileType.ToString().ToLower()}"),
+                    _ => throw new InvalidOperationException()
+                };
+
+                image.Save(outputPath, encoder);
+
+                lock (lockobject)
+                {
+                    form?.Invoke(() => form.sintyoku.Text = $"{++cnt} / {activeFilesLength}");
+                    Debug.WriteLine($"Converted: {Path.GetFileName(file)}");
+                }
+            }
+            catch
+            {
+                lock (lockobject)
+                {
+                    moveErrorList.Enqueue(file);
+                    Debug.WriteLine($"Error converting: {Path.GetFileName(file)}");
+                }
+            }
+
+            Function.Taskbar(cnt, activeFilesLength - 1);
+        }
+
+        /// <summary>
+        /// もし変換に失敗したファイルがあれば表示します。
+        /// </summary>
+        private void ShowErrorMessages()
+        {
+            if (!moveErrorList.IsEmpty)
+            {
+                string errorMessages = string.Join(Environment.NewLine, moveErrorList);
+                MessageBox.Show($"{errorMessages}{Environment.NewLine}以下の画像の変換（保存）に失敗しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 moveErrorList.Clear();
             }
         }
