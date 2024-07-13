@@ -27,7 +27,7 @@ namespace PictureReSize.component
         /// <summary>
         /// 並列処理のロックオブジェクト
         /// </summary>
-        private static object lockobject { get; set; } = new();
+        private static object Lockobject { get; set; } = new();
 
         /// <summary>
         /// 出力フォルダ
@@ -126,7 +126,7 @@ namespace PictureReSize.component
             IImageEncoder encoder = GetImageEncoder(OutputFileType);
 
             // フォルダごとに別スレッドで処理させる
-            var tasks = InputFolderListPath.Select(folder => Task.Run(() =>
+            IEnumerable<Task> tasks = InputFolderListPath.Select(folder => Task.Run(() =>
             {
                 // フォルダ内の画像ファイルを取得
                 var files = Directory.GetFiles(folder, "*." + InputFileType);
@@ -158,7 +158,7 @@ namespace PictureReSize.component
         {
             try
             {
-                using var image = Image.Load(file);
+                Image image = Image.Load(file);
 
                 int resizeWidth, resizeHeight;
                 if (Aspect_lock)
@@ -184,7 +184,10 @@ namespace PictureReSize.component
 
                 image.Save(outputPath, encoder);
 
-                lock (lockobject)
+                image.Dispose();
+                image = null;
+
+                lock (Lockobject)
                 {
                     form?.Invoke(() => form.sintyoku.Text = $"{++cnt} / {activeFilesLength}");
                     Debug.WriteLine($"Converted: {Path.GetFileName(file)}");
@@ -192,7 +195,7 @@ namespace PictureReSize.component
             }
             catch
             {
-                lock (lockobject)
+                lock (Lockobject)
                 {
                     moveErrorList.Enqueue(file);
                     Debug.WriteLine($"Error converting: {Path.GetFileName(file)}");
