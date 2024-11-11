@@ -158,7 +158,7 @@ namespace PictureReSize.component
         {
             try
             {
-                Image image = Image.Load(file);
+                using Image image = Image.Load(file);
 
                 int resizeWidth, resizeHeight;
                 if (Aspect_lock)
@@ -183,9 +183,7 @@ namespace PictureReSize.component
                 };
 
                 image.Save(outputPath, encoder);
-
                 image.Dispose();
-                image = null;
 
                 lock (Lockobject)
                 {

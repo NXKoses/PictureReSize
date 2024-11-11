@@ -14,6 +14,8 @@ namespace PictureReSize
         readonly string UpdateHistoryURL = @"http://kosenyax.starfree.jp/PictureResize/UpdateHistory.txt";
         readonly string nowVersion;
 
+        private static readonly HttpClient client = new();
+
         public UpdateHistoryWindow(String nowVersion)
         {
             this.nowVersion = nowVersion;
@@ -34,7 +36,6 @@ namespace PictureReSize
         {
             try
             {
-                HttpClient client = new();
                 var getUpdateHistory = await client.GetStringAsync(UpdateHistoryURL);
 
                 return getUpdateHistory;
