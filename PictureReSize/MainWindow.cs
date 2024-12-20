@@ -13,7 +13,7 @@ namespace PictureReSize
         private readonly List<string> inputFolder_list_path = new();
         private string output_path = "";
 
-        readonly string Version = "2.0.3.2";
+        readonly string Version = "2.0.3.3";
 
         public MainWindow()
         {
@@ -154,7 +154,7 @@ namespace PictureReSize
         /// <param name="e"></param>
         private void InputFileListRemoveButton_Click(object sender, EventArgs e)
         {
-            if (ConvertModeSelect_comboBox.SelectedIndex == 1 || ConvertModeSelect_comboBox.SelectedIndex == 2)
+            if (ConvertModeSelect_comboBox.SelectedIndex is 1 or 2)
             {
                 if (InputFileListBox.SelectedIndex == -1) return;
 
@@ -191,7 +191,7 @@ namespace PictureReSize
             InputFileListBox.Items.Clear();
 
             // 複数変換、複数同期変換のとき
-            if (ConvertModeSelect_comboBox.SelectedIndex == 1 | ConvertModeSelect_comboBox.SelectedIndex == 2)
+            if (ConvertModeSelect_comboBox.SelectedIndex is 1 or 2)
             {
                 // 複数変換のとき
                 if (ConvertModeSelect_comboBox.SelectedIndex == 1)
@@ -332,7 +332,7 @@ namespace PictureReSize
             // 初回起動、または強制表示のとき
             if (isFirst || forceShow)
             {
-                var hw = new UpdateHistoryWindow(Version);
+                var hw = new UpdateHistoryWindow();
                 hw.ShowDialog();
 
                 Properties.Settings.Default.IsFirst = false;

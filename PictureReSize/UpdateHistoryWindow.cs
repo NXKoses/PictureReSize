@@ -12,21 +12,16 @@ namespace PictureReSize
     public partial class UpdateHistoryWindow : Form
     {
         readonly string UpdateHistoryURL = @"http://kosenyax.starfree.jp/PictureResize/UpdateHistory.txt";
-        readonly string nowVersion;
 
         private static readonly HttpClient client = new();
 
-        public UpdateHistoryWindow(String nowVersion)
+        public UpdateHistoryWindow()
         {
-            this.nowVersion = nowVersion;
             InitializeComponent();
         }
 
         private async void UpdateHistoryWindow_Load(object sender, EventArgs e)
         {
-            // 現在のバージョンの表示
-            this.nowversion_label.Text = $"現在のバージョン： {nowVersion}";
-
             // 更新履歴の取得と表示
             string updateHistory = await GetUpdateHistoryAsync();
             this.info_richTextBox.Text = updateHistory;
