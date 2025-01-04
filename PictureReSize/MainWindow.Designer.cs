@@ -71,11 +71,11 @@ namespace PictureReSize
             groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(InputTypetextbox);
             groupBox1.Controls.Add(label2);
-            groupBox1.Location = new System.Drawing.Point(12, 34);
+            groupBox1.Location = new System.Drawing.Point(12, 33);
             groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            groupBox1.Size = new System.Drawing.Size(224, 226);
+            groupBox1.Size = new System.Drawing.Size(224, 227);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "基本設定";
@@ -105,6 +105,7 @@ namespace PictureReSize
             label1.Size = new System.Drawing.Size(15, 18);
             label1.TabIndex = 1;
             label1.Text = "x";
+            label1.Click += label1_Click;
             // 
             // Ytextbox
             // 
@@ -293,7 +294,7 @@ namespace PictureReSize
             ヘルプLToolStripButton.Text = "更新履歴";
             ヘルプLToolStripButton.Click += ヘルプLToolStripButton_Click;
             // 
-            // Form1
+            // MainWindow
             // 
             AllowDrop = true;
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
@@ -313,7 +314,7 @@ namespace PictureReSize
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             MaximizeBox = false;
-            Name = "Form1";
+            Name = "MainWindow";
             Text = "Picture Resize 2";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();

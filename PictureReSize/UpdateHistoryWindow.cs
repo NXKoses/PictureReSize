@@ -11,7 +11,7 @@ namespace PictureReSize
 {
     public partial class UpdateHistoryWindow : Form
     {
-        readonly string UpdateHistoryURL = @"http://kosenyax.starfree.jp/PictureResize/UpdateHistory.txt";
+        readonly string UpdateHistoryURL = @"https://kosenyaxs.stars.ne.jp/PictureResize/UpdateHistory.txt";
 
         private static readonly HttpClient client = new();
 

@@ -13,7 +13,7 @@ namespace PictureReSize
         private readonly List<string> inputFolder_list_path = new();
         private string output_path = "";
 
-        readonly string Version = "2.0.3.3";
+        readonly string Version = "2.0.3.4";
 
         public MainWindow()
         {
@@ -354,6 +354,13 @@ namespace PictureReSize
         {
             // 表示
             ShowUpdateInfo(true);
+        }
+
+        // 解像度の「x」を押したとき
+        // 解像度を入れ替える
+        private void label1_Click(object sender, EventArgs e)
+        {
+            (Ytextbox.Text, Xtextbox.Text) = (Xtextbox.Text, Ytextbox.Text);
         }
     }
 }
