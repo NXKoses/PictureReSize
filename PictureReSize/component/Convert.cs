@@ -226,7 +226,7 @@ namespace PictureReSize.component
             // エンコーダーを取得しておく
             if (outputFileType == ImageFormat.Png) return new PngEncoder()
             {
-                CompressionLevel = PngCompressionLevel.BestSpeed,
+                CompressionLevel = PngCompressionLevel.DefaultCompression,
                 SkipMetadata = false
             };
             if (outputFileType == ImageFormat.Jpeg) return new JpegEncoder()
@@ -238,7 +238,7 @@ namespace PictureReSize.component
 
             return new PngEncoder()
             {
-                CompressionLevel = PngCompressionLevel.BestSpeed,
+                CompressionLevel = PngCompressionLevel.DefaultCompression,
                 SkipMetadata = false
             };
         }
