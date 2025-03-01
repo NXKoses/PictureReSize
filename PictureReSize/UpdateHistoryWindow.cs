@@ -1,9 +1,5 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Configuration;
-using System.Net;
+﻿using System;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 

@@ -29,6 +29,7 @@ namespace PictureReSize
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             groupBox1 = new System.Windows.Forms.GroupBox();
             Xtextbox = new System.Windows.Forms.TextBox();
@@ -54,6 +55,7 @@ namespace PictureReSize
             SettingSave_toolStripButton = new System.Windows.Forms.ToolStripButton();
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             ヘルプLToolStripButton = new System.Windows.Forms.ToolStripButton();
+            toolTip1 = new System.Windows.Forms.ToolTip(components);
             groupBox1.SuspendLayout();
             toolStrip1.SuspendLayout();
             SuspendLayout();
@@ -246,7 +248,7 @@ namespace PictureReSize
             // 
             // InputFileListRemoveButton
             // 
-            InputFileListRemoveButton.Location = new System.Drawing.Point(528, 225);
+            InputFileListRemoveButton.Location = new System.Drawing.Point(528, 223);
             InputFileListRemoveButton.Name = "InputFileListRemoveButton";
             InputFileListRemoveButton.Size = new System.Drawing.Size(77, 23);
             InputFileListRemoveButton.TabIndex = 7;
@@ -312,6 +314,7 @@ namespace PictureReSize
             Controls.Add(groupBox1);
             Font = new System.Drawing.Font("メイリオ", 9F);
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            KeyPreview = true;
             Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             MaximizeBox = false;
             Name = "MainWindow";
@@ -350,6 +353,7 @@ namespace PictureReSize
         private System.Windows.Forms.ToolStripButton SettingSave_toolStripButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton ヘルプLToolStripButton;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 

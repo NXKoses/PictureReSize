@@ -72,7 +72,7 @@ namespace PictureReSize.component
         /// <summary>
         /// スレッド数
         /// </summary>
-        public int Thread_Value { get; set; } = 10;
+        public int Thread_Value { get; set; } = -1;
 
         private ConcurrentQueue<string> moveErrorList = new();
         private int activeFilesLength;
@@ -95,11 +95,9 @@ namespace PictureReSize.component
                 return;
             }
 
-            // 入力フォルダの中の変換できるファイル数をカウント
-            foreach (var item in InputFolderListPath)
-            {
-                activeFilesLength += Directory.GetFiles(item, "*." + InputFileType).Length;
-            }
+            // 入力フォルダの中の変換できるファイルを取得、個数もカウント
+            var allFiles = InputFolderListPath.SelectMany(folder => Directory.GetFiles(folder, "*." + InputFileType)).ToList();
+            activeFilesLength = allFiles.Count;
 
             // 変換できるファイルが無い場合
             if (activeFilesLength == 0)
@@ -110,14 +108,14 @@ namespace PictureReSize.component
 
             // 変換処理
             Converting = true;
-            await ProcessImagesAsync();
+            await ProcessImagesAsync(allFiles);
         }
 
         /// <summary>
         /// フォルダごとに並列処理で画像を変換します。
         /// </summary>
         /// <returns></returns>
-        private async Task ProcessImagesAsync()
+        private async Task ProcessImagesAsync(List<string> allFiles)
         {
             // 並列処理の設定
             var options = new ParallelOptions { MaxDegreeOfParallelism = Thread_Value };
@@ -125,26 +123,32 @@ namespace PictureReSize.component
             // エンコーダーを取得しておく
             IImageEncoder encoder = GetImageEncoder(OutputFileType);
 
-            // フォルダごとに別スレッドで処理させる
-            IEnumerable<Task> tasks = InputFolderListPath.Select(folder => Task.Run(() =>
-            {
-                // フォルダ内の画像ファイルを取得
-                var files = Directory.GetFiles(folder, "*." + InputFileType);
-                // フォルダ内の画像ファイルを並列処理で変換する
-                Parallel.ForEach(files, options, file =>
-                {
-                    ProcessImage(file, folder, encoder);
-                });
-            }));
+            //// フォルダごとに別スレッドで処理させる
+            //IEnumerable<Task> tasks = InputFolderListPath.Select(folder => Task.Run(() =>
+            //{
+            //    // フォルダ内の画像ファイルを取得
+            //    var files = Directory.GetFiles(folder, "*." + InputFileType);
+            //    // フォルダ内の画像ファイルを並列処理で変換する
+            //    Parallel.ForEach(files, options, file =>
+            //    {
+            //        ProcessImage(file, folder, encoder);
+            //    });
+            //}));
 
-            // すべての処理が終わるまで待機
-            await Task.WhenAll(tasks);
+            await Parallel.ForEachAsync(allFiles, async (file, _) =>
+            {
+                await ProcessImage(file, encoder);
+            });
+
+            // poolのリソースを解放
+            Configuration.Default.MemoryAllocator.ReleaseRetainedResources();
 
             MessageBox.Show($"{cnt}個変換しました", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Converting = false;
 
             // もし変換に失敗したファイルがあれば表示
             ShowErrorMessages();
+
         }
 
         /// <summary>
@@ -154,11 +158,11 @@ namespace PictureReSize.component
         /// <param name="file"></param>
         /// <param name="folder"></param>
         /// <param name="encoder"></param>
-        private void ProcessImage(string file, string folder, IImageEncoder encoder)
+        private async Task ProcessImage(string file, IImageEncoder encoder)
         {
             try
             {
-                using Image image = Image.Load(file);
+                using Image image = await Image.LoadAsync(file);
 
                 int resizeWidth, resizeHeight;
                 if (Aspect_lock)
@@ -174,16 +178,18 @@ namespace PictureReSize.component
 
                 image.Mutate(x => x.Resize(resizeWidth, resizeHeight));
 
-                string outputPath = ConvertMode switch
+                string outputPath;
+                // 複数フォルダ同期モードの場合は、入力フォルダと出力フォルダが同じになるので、入力フォルダ内に保存する
+                if (ConvertMode == ConvertMode.Multiple_Folder_Sync)
                 {
-                    ConvertMode.Normal => Path.Combine(OutputFolderPath, $"{Path.GetFileNameWithoutExtension(file)}.{OutputFileType.ToString().ToLower()}"),
-                    ConvertMode.Multiple => Path.Combine(OutputFolderPath, $"{Path.GetFileNameWithoutExtension(file)}.{OutputFileType.ToString().ToLower()}"),
-                    ConvertMode.Multiple_Folder_Sync => Path.Combine(folder, $"{Path.GetFileNameWithoutExtension(file)}.{OutputFileType.ToString().ToLower()}"),
-                    _ => throw new InvalidOperationException()
-                };
+                    outputPath = Path.Combine(Path.GetDirectoryName(file)!, $"{Path.GetFileNameWithoutExtension(file)}.{OutputFileType!.ToString().ToLower()}");
+                }
+                else
+                {
+                    outputPath = Path.Combine(OutputFolderPath!, $"{Path.GetFileNameWithoutExtension(file)}.{OutputFileType!.ToString().ToLower()}");
+                }
 
-                image.Save(outputPath, encoder);
-                image.Dispose();
+                await image.SaveAsync(outputPath, encoder);
 
                 lock (Lockobject)
                 {

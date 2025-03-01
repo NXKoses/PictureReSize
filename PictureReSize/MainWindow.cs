@@ -127,6 +127,7 @@ namespace PictureReSize
                 _ => ImageFormat.Png,
             };
 
+            // TODO モデルに分ける
             var cvt = new Convert()
             {
                 InputFolderListPath = inputFolder_list_path,                        // 変換フォルダリスト
@@ -140,7 +141,7 @@ namespace PictureReSize
                 Aspect_lock = aspect_ratioCheckBox.Checked,                         // アスペクト比ロック
 
                 ConvertMode = (ConvertMode)ConvertModeSelect_comboBox.SelectedIndex,// 変換モード
-                Thread_Value = 10                                                   // 並列同期数
+                Thread_Value = -1                                                   // 並列同期数
             };
 
             // 変換実行

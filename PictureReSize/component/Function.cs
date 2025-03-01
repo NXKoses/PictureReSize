@@ -1,5 +1,4 @@
 ﻿using Microsoft.WindowsAPICodePack.Taskbar;
-using System.IO;
 
 namespace PictureReSize.component
 {
