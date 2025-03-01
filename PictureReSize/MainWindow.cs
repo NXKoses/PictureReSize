@@ -13,7 +13,7 @@ namespace PictureReSize
         private readonly List<string> inputFolder_list_path = new();
         private string output_path = "";
 
-        readonly string Version = "2.0.3.5";
+        readonly string Version = "2.0.3.6";
 
         public MainWindow()
         {
