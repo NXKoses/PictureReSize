@@ -13,7 +13,6 @@ env:
   MAIN_EXE: PictureReSize.exe
   REPO_URL: https://github.com/NXKoses/PictureReSize
   PACK_ID: PictureReSize
-  DOTNET_VERSION: 8.0.x
 
 jobs:
   deploy-to-github-releases:
@@ -30,7 +29,7 @@ jobs:
       - name: Install .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: $DOTNET_VERSION
+          dotnet-version: 8.0.x
 
       - name: Publish Application
         run: dotnet publish $PROJECT_PATH -c Release -o publish -r win-x64 --self-contained true
