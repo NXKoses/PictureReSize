@@ -8,7 +8,7 @@ namespace PictureReSize
 {
     internal class UpdateProcess
     {
-        private const string GITHUB_URL = "https://github.com/NXKoses/VelopackTest";
+        private const string GITHUB_URL = "https://github.com/NXKoses/PictureReSize/";
 
         public static async Task CheckForUpdateAsync(Form form)
         {
