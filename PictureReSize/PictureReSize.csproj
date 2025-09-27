@@ -8,7 +8,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 	<Platforms>AnyCPU;x64</Platforms>
-	<Version>1.0.1</Version>
+	<Version>1.0.2</Version>
 	<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 	<ApplicationIcon>pl.ico</ApplicationIcon>
   </PropertyGroup>
