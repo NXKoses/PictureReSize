@@ -1,0 +1,53 @@
+name: AutoRelease
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  PROJECT_PATH: PictureReSize/PictureReSize.csproj
+  MAIN_EXE: PictureReSize.exe
+  REPO_URL: https://github.com/NXKoses/PictureReSize
+  PACK_ID: PictureReSize
+  DOTNET_VERSION: 8.0.x
+
+jobs:
+  deploy-to-github-releases:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+
+      - name: Get Version from Project File
+        id: get-version
+        shell: bash
+        run: echo "version=$(grep -oE '<Version>[^<]+' $PROJECT_PATH | sed 's/<Version>//')" >> $GITHUB_OUTPUT
+
+      - name: Install .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: $DOTNET_VERSION
+
+      - name: Publish Application
+        run: dotnet publish $PROJECT_PATH -c Release -o publish -r win-x64 --self-contained true
+
+      - name: Create Velopack Release
+        shell: bash
+        run: |
+          dotnet tool install -g vpk
+          vpk download github --repoUrl $REPO_URL
+          vpk pack --mainExe $MAIN_EXE \
+            -v ${{ steps.get-version.outputs.version }} \
+            -p publish \
+            --packId $PACK_ID \
+            --channel win
+          vpk upload github \
+            --repoUrl $REPO_URL \
+            --token ${{ secrets.GITHUB_TOKEN }} \
+            --publish \
+            --releaseName "$PACK_ID ${{ steps.get-version.outputs.version }}" \
+            --tag v${{ steps.get-version.outputs.version }}
