@@ -15,5 +15,10 @@ namespace PictureReSize
         {
             this.progressBar1.Value = p;
         }
+
+        private void UpdateForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+        }
     }
 }

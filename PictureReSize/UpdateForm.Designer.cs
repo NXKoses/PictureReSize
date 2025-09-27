@@ -57,8 +57,11 @@
             Controls.Add(progressBar1);
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             MaximizeBox = false;
+            MinimizeBox = false;
             Name = "UpdateForm";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             Text = "UpdateForm";
+            FormClosing += UpdateForm_FormClosing;
             ResumeLayout(false);
             PerformLayout();
         }
