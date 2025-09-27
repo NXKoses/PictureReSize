@@ -298,6 +298,7 @@ namespace PictureReSize
             Controls.Add(groupBox1);
             Font = new System.Drawing.Font("メイリオ", 9F);
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             KeyPreview = true;
             Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             MaximizeBox = false;
