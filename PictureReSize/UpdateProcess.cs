@@ -19,7 +19,7 @@ namespace PictureReSize
                 if (!mgr.IsInstalled)
                 {
                     // インストールされていない場合
-                    MessageBox.Show("更新を確認できませんでした。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("VeloPackが認識できませんでした。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -30,7 +30,7 @@ namespace PictureReSize
                     return; // 新しいバージョンがない場合は何もしない
                 }
 
-                var result = MessageBox.Show("新しいバージョンが見つかりました。更新しますか？", "更新", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                var result = MessageBox.Show($"新しいバージョン({newVersion.TargetFullRelease.Version})が見つかりました。更新しますか？", "更新", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                 if (result == DialogResult.Yes)
                 {
                     form.Hide(); // メインフォームを隠す
