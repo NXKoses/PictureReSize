@@ -1,4 +1,4 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using System.Windows.Forms;
 
 namespace PictureReSize.component
 {
@@ -6,23 +6,17 @@ namespace PictureReSize.component
     {
         public static string FolderSelect()
         {
-            // ダイアログのインスタンスを生成
-            using CommonOpenFileDialog dialog = new("フォルダーの選択")
+            using OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Title = "フォルダを選択してください";
+            dialog.FileName = "フォルダを選択してください";
+            dialog.Filter = "フォルダ|.";
+            dialog.CheckFileExists = false;
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
-                // 選択形式をフォルダースタイルに
-                IsFolderPicker = true,
-            };
-
-            // ダイアログを表示
-            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-            {
-
-                return dialog.FileName;
+                string folderPath = System.IO.Path.GetDirectoryName(dialog.FileName) ?? string.Empty;
+                return folderPath;
             }
-            else
-            {
-                return string.Empty;
-            }
+            return string.Empty;
         }
     }
 }
