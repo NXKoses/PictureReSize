@@ -206,7 +206,7 @@ namespace PictureReSize.component
                 }
             }
 
-            Function.Taskbar(cnt, activeFilesLength - 1);
+            //Function.Taskbar(cnt, activeFilesLength - 1);
         }
 
         /// <summary>
